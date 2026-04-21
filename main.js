@@ -9,57 +9,73 @@ const provinceCountElement = document.querySelector("#province-count");
 const provinceUpdatedElement = document.querySelector("#province-updated");
 const institutionListElement = document.querySelector("#institution-list");
 const provinceChipElement = document.querySelector("#province-chip");
+const provinceSearchInput = document.querySelector("#province-search");
+const provinceOptionsElement = document.querySelector("#province-options");
+const provinceSearchSubmitButton = document.querySelector("#province-search-submit");
+const resetViewButton = document.querySelector("#reset-view");
+const provinceTotalElement = document.querySelector("#province-total");
+const selectionSummaryElement = document.querySelector("#selection-summary");
 
 let thailandGeoData = null;
 let currentTransform = d3.zoomIdentity;
 let selectedProvinceName = "กรุงเทพมหานคร";
+let hoveredProvinceName = "";
+let currentMapState = {
+  width: 0,
+  height: 0,
+  mapLayer: null,
+  provincePaths: null,
+  labelGroups: null,
+  path: null,
+  zoomBehavior: null,
+};
 
 // Tune interaction and label sizing for each device range.
 function getResponsiveMapConfig(width) {
   if (width <= 480) {
     return {
-      minLabelSize: 18,
-      maxLabelSize: 18,
-      globalLabelZoom: 5.4,
+      minLabelSize: 7.8,
+      maxLabelSize: 10.8,
+      globalLabelZoom: 1,
       maxZoom: 10,
-      labelScaleExponent: 1.85,
-      strokeScaleExponent: 1.5,
-      baseStroke: 3.2,
+      labelScaleExponent: 1,
+      strokeScaleExponent: 1,
+      baseStroke: 1.45,
     };
   }
 
   if (width <= 768) {
     return {
-      minLabelSize: 28,
-      maxLabelSize: 28,
-      globalLabelZoom: 4.8,
+      minLabelSize: 8.2,
+      maxLabelSize: 11.4,
+      globalLabelZoom: 1,
       maxZoom: 10,
-      labelScaleExponent: 1.8,
-      strokeScaleExponent: 1.45,
-      baseStroke: 4.6,
+      labelScaleExponent: 1,
+      strokeScaleExponent: 1,
+      baseStroke: 1.55,
     };
   }
 
   if (width <= 1024) {
     return {
-      minLabelSize: 40,
-      maxLabelSize: 40,
-      globalLabelZoom: 4.25,
+      minLabelSize: 8.6,
+      maxLabelSize: 11.8,
+      globalLabelZoom: 1,
       maxZoom: 9,
-      labelScaleExponent: 1.75,
-      strokeScaleExponent: 1.45,
-      baseStroke: 6.2,
+      labelScaleExponent: 1,
+      strokeScaleExponent: 1,
+      baseStroke: 1.65,
     };
   }
 
   return {
-    minLabelSize: 52,
-    maxLabelSize: 52,
-    globalLabelZoom: 4,
+    minLabelSize: 9,
+    maxLabelSize: 12.8,
+    globalLabelZoom: 1,
     maxZoom: 8,
-    labelScaleExponent: 1.7,
-    strokeScaleExponent: 1.45,
-    baseStroke: 8,
+    labelScaleExponent: 1,
+    strokeScaleExponent: 1,
+    baseStroke: 1.75,
   };
 }
 
@@ -301,6 +317,37 @@ const THAI_PROVINCE_NAMES = {
   Yasothon: "ยโสธร",
 };
 
+const PROVINCE_LABEL_LINE_BREAKS = {
+  กรุงเทพมหานคร: ["กรุงเทพ", "มหานคร"],
+  ฉะเชิงเทรา: ["ฉะเชิง", "เทรา"],
+  นครนายก: ["นคร", "นายก"],
+  นครปฐม: ["นคร", "ปฐม"],
+  นครราชสีมา: ["นคร", "ราชสีมา"],
+  นครศรีธรรมราช: ["นครศรี", "ธรรมราช"],
+  นครสวรรค์: ["นคร", "สวรรค์"],
+  ประจวบคีรีขันธ์: ["ประจวบ", "คีรีขันธ์"],
+  พระนครศรีอยุธยา: ["พระนครศรี", "อยุธยา"],
+  มหาสารคาม: ["มหา", "สารคาม"],
+  สมุทรปราการ: ["สมุทร", "ปราการ"],
+  สมุทรสงคราม: ["สมุทร", "สงคราม"],
+  สมุทรสาคร: ["สมุทร", "สาคร"],
+  สุราษฎร์ธานี: ["สุราษฎร์", "ธานี"],
+  หนองบัวลำภู: ["หนองบัว", "ลำภู"],
+  อำนาจเจริญ: ["อำนาจ", "เจริญ"],
+  อุดรธานี: ["อุดร", "ธานี"],
+  อุบลราชธานี: ["อุบล", "ราชธานี"],
+};
+
+function normalizeProvinceLookupName(name) {
+  return String(name ?? "")
+    .replace(/\s*\([^)]*\)\s*/g, "")
+    .trim();
+}
+
+function getProvinceLabelLines(provinceName) {
+  return PROVINCE_LABEL_LINE_BREAKS[provinceName] ?? [provinceName];
+}
+
 // Pick the raw province name from common field names used in Thailand map files.
 function getRawProvinceName(feature) {
   const properties = feature?.properties ?? {};
@@ -320,13 +367,13 @@ function getRawProvinceName(feature) {
 
 // Prefer Thai labels, but keep a safe fallback if the source data changes.
 function getProvinceName(feature) {
-  const rawProvinceName = getRawProvinceName(feature);
+  const rawProvinceName = normalizeProvinceLookupName(getRawProvinceName(feature));
   return THAI_PROVINCE_NAMES[rawProvinceName] ?? rawProvinceName;
 }
 
 // Resolve the palette color for each province.
 function getProvinceFill(feature) {
-  const rawProvinceName = getRawProvinceName(feature);
+  const rawProvinceName = normalizeProvinceLookupName(getRawProvinceName(feature));
   const region = PROVINCE_REGIONS[rawProvinceName] ?? "unknown";
   return REGION_COLORS[region] ?? REGION_COLORS.unknown;
 }
@@ -341,7 +388,7 @@ function getProvinceSelectedFill(feature) {
 }
 
 function getProvinceRegionLabel(feature) {
-  const rawProvinceName = getRawProvinceName(feature);
+  const rawProvinceName = normalizeProvinceLookupName(getRawProvinceName(feature));
   const regionKey = PROVINCE_REGIONS[rawProvinceName] ?? "unknown";
   return REGION_LABELS[regionKey] ?? REGION_LABELS.unknown;
 }
@@ -372,6 +419,7 @@ function renderProvinceDetails(provinceName, feature) {
   provinceRegionElement.textContent = regionLabel;
   provinceCountElement.textContent = `${provinceData.institutions.length} แห่ง`;
   provinceUpdatedElement.textContent = provinceData.updatedAt;
+  selectionSummaryElement.textContent = provinceName;
 
   institutionListElement.replaceChildren();
 
@@ -384,6 +432,323 @@ function renderProvinceDetails(provinceName, feature) {
     `;
     institutionListElement.appendChild(listItem);
   });
+}
+
+function getProvinceFeatureByName(provinceName) {
+  if (!thailandGeoData) {
+    return null;
+  }
+
+  const matchingFeatures = thailandGeoData.features.filter(
+    (feature) => getProvinceName(feature) === provinceName
+  );
+
+  if (!matchingFeatures.length) {
+    return null;
+  }
+
+  if (!currentMapState.path) {
+    return matchingFeatures[0];
+  }
+
+  return matchingFeatures.reduce((largestFeature, feature) =>
+    currentMapState.path.area(feature) > currentMapState.path.area(largestFeature)
+      ? feature
+      : largestFeature
+  );
+}
+
+function getSearchMatch(query) {
+  const normalizedQuery = query.trim().toLocaleLowerCase("th");
+
+  if (!normalizedQuery || !thailandGeoData) {
+    return null;
+  }
+
+  const features = thailandGeoData.features;
+  const exactMatch = features.find(
+    (feature) => getProvinceName(feature).toLocaleLowerCase("th") === normalizedQuery
+  );
+
+  if (exactMatch) {
+    return getProvinceFeatureByName(getProvinceName(exactMatch));
+  }
+
+  return (
+    features.find((feature) =>
+      getProvinceName(feature).toLocaleLowerCase("th").includes(normalizedQuery)
+    ) ?? null
+  );
+}
+
+function populateProvinceSearch(features) {
+  const provinceNames = Array.from(new Set(features.map((feature) => getProvinceName(feature)))).sort(
+    (left, right) => left.localeCompare(right, "th")
+  );
+
+  provinceOptionsElement.replaceChildren();
+
+  provinceNames.forEach((provinceName) => {
+    const option = document.createElement("option");
+    option.value = provinceName;
+    provinceOptionsElement.appendChild(option);
+  });
+
+  provinceTotalElement.textContent = `${provinceNames.length} จังหวัด`;
+}
+
+function updateProvinceVisualState() {
+  if (!currentMapState.provincePaths || !currentMapState.labelGroups) {
+    return;
+  }
+
+  currentMapState.provincePaths
+    .classed("is-hovered", (feature) => getProvinceName(feature) === hoveredProvinceName)
+    .classed("is-selected", (feature) => getProvinceName(feature) === selectedProvinceName)
+    .attr("fill", (feature) => {
+      const provinceName = getProvinceName(feature);
+
+      if (provinceName === selectedProvinceName) {
+        return getProvinceSelectedFill(feature);
+      }
+
+      if (provinceName === hoveredProvinceName) {
+        return getProvinceHoverFill(feature);
+      }
+
+      return getProvinceFill(feature);
+    });
+
+  currentMapState.labelGroups
+    .classed("is-hovered", (feature) => getProvinceName(feature) === hoveredProvinceName)
+    .classed("is-selected", (feature) => getProvinceName(feature) === selectedProvinceName);
+}
+
+function selectProvince(provinceName, feature = null) {
+  const matchedFeature = feature ?? getProvinceFeatureByName(provinceName);
+
+  if (!matchedFeature) {
+    return;
+  }
+
+  hoveredProvinceName = "";
+  renderProvinceDetails(provinceName, matchedFeature);
+  provinceSearchInput.value = provinceName;
+  updateProvinceVisualState();
+  updateLabelScale(currentTransform.k);
+}
+
+function resetMapView(animate = true) {
+  if (!currentMapState.zoomBehavior) {
+    return;
+  }
+
+  const selection = animate ? mapSvg.transition().duration(500) : mapSvg;
+  selection.call(currentMapState.zoomBehavior.transform, d3.zoomIdentity);
+}
+
+function focusProvince(feature, animate = true) {
+  if (!currentMapState.zoomBehavior || !currentMapState.path) {
+    return;
+  }
+
+  const [[x0, y0], [x1, y1]] = currentMapState.path.bounds(feature);
+  const dx = Math.max(x1 - x0, 1);
+  const dy = Math.max(y1 - y0, 1);
+  const scale = Math.max(
+    1.6,
+    Math.min(6, 0.78 / Math.max(dx / currentMapState.width, dy / currentMapState.height))
+  );
+  const translateX = currentMapState.width / 2 - scale * ((x0 + x1) / 2);
+  const translateY = currentMapState.height / 2 - scale * ((y0 + y1) / 2);
+  const nextTransform = d3.zoomIdentity.translate(translateX, translateY).scale(scale);
+  const selection = animate ? mapSvg.transition().duration(650) : mapSvg;
+
+  selection.call(currentMapState.zoomBehavior.transform, nextTransform);
+}
+
+function boxesIntersect(left, right) {
+  return !(
+    left.right <= right.left ||
+    left.left >= right.right ||
+    left.bottom <= right.top ||
+    left.top >= right.bottom
+  );
+}
+
+function getBoxOverlapArea(left, right) {
+  if (!boxesIntersect(left, right)) {
+    return 0;
+  }
+
+  const width = Math.min(left.right, right.right) - Math.max(left.left, right.left);
+  const height = Math.min(left.bottom, right.bottom) - Math.max(left.top, right.top);
+  return width * height;
+}
+
+function clampValue(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function layoutProvinceLabels() {
+  if (!currentMapState.labelGroups) {
+    return;
+  }
+
+  const placedBoxes = [];
+  const mapPadding = 6;
+  const labelNodes = currentMapState.labelGroups.nodes().sort((leftNode, rightNode) => {
+    const leftSelected = leftNode.classList.contains("is-selected") ? 1 : 0;
+    const rightSelected = rightNode.classList.contains("is-selected") ? 1 : 0;
+
+    if (leftSelected !== rightSelected) {
+      return rightSelected - leftSelected;
+    }
+
+    return Number(rightNode.dataset.area || 0) - Number(leftNode.dataset.area || 0);
+  });
+
+  labelNodes.forEach((node) => {
+    const group = d3.select(node);
+    const rect = group.select("rect");
+    const line = group.select("line");
+    const rectX = Number(rect.attr("x") || 0);
+    const rectY = Number(rect.attr("y") || 0);
+    const rectWidth = Number(rect.attr("width") || 0);
+    const rectHeight = Number(rect.attr("height") || 0);
+    const anchorX = Number(node.dataset.anchorX || 0);
+    const anchorY = Number(node.dataset.anchorY || 0);
+
+    if (!rectWidth || !rectHeight) {
+      group.attr("transform", `translate(${anchorX}, ${anchorY})`);
+      line.attr("display", "none");
+      return;
+    }
+
+    const offsetX = Math.max(rectWidth * 0.72, 18);
+    const offsetY = Math.max(rectHeight * 0.9, 14);
+    const candidateOffsets = [
+      [0, 0],
+      [0, -offsetY],
+      [offsetX, 0],
+      [-offsetX, 0],
+      [0, offsetY],
+      [offsetX * 0.86, -offsetY * 0.78],
+      [-offsetX * 0.86, -offsetY * 0.78],
+      [offsetX * 0.86, offsetY * 0.78],
+      [-offsetX * 0.86, offsetY * 0.78],
+      [0, -offsetY * 1.82],
+      [offsetX * 1.46, 0],
+      [-offsetX * 1.46, 0],
+      [0, offsetY * 1.82],
+      [offsetX * 1.18, -offsetY * 1.42],
+      [-offsetX * 1.18, -offsetY * 1.42],
+      [offsetX * 1.18, offsetY * 1.42],
+      [-offsetX * 1.18, offsetY * 1.42],
+    ];
+
+    let bestPlacement = null;
+
+    candidateOffsets.forEach(([dx, dy]) => {
+      const candidateCenterX = anchorX + dx;
+      const candidateCenterY = anchorY + dy;
+      const candidateBox = {
+        left: candidateCenterX + rectX,
+        top: candidateCenterY + rectY,
+        right: candidateCenterX + rectX + rectWidth,
+        bottom: candidateCenterY + rectY + rectHeight,
+      };
+
+      let penalty = Math.abs(dx) + Math.abs(dy);
+
+      penalty += Math.max(mapPadding - candidateBox.left, 0) * 14;
+      penalty += Math.max(candidateBox.right - (currentMapState.width - mapPadding), 0) * 14;
+      penalty += Math.max(mapPadding - candidateBox.top, 0) * 14;
+      penalty += Math.max(candidateBox.bottom - (currentMapState.height - mapPadding), 0) * 14;
+
+      placedBoxes.forEach((placedBox) => {
+        penalty += getBoxOverlapArea(candidateBox, placedBox) * 30;
+      });
+
+      if (!bestPlacement || penalty < bestPlacement.penalty) {
+        bestPlacement = {
+          penalty,
+          centerX: candidateCenterX,
+          centerY: candidateCenterY,
+          box: candidateBox,
+        };
+      }
+    });
+
+    const centerX = clampValue(bestPlacement.centerX, mapPadding, currentMapState.width - mapPadding);
+    const centerY = clampValue(bestPlacement.centerY, mapPadding, currentMapState.height - mapPadding);
+    const localAnchorX = anchorX - centerX;
+    const localAnchorY = anchorY - centerY;
+    const lineEndX = clampValue(localAnchorX, rectX, rectX + rectWidth);
+    const lineEndY = clampValue(localAnchorY, rectY, rectY + rectHeight);
+    const hasOffset = Math.abs(localAnchorX) > 6 || Math.abs(localAnchorY) > 6;
+
+    group.attr("transform", `translate(${centerX}, ${centerY})`);
+
+    line
+      .attr("display", hasOffset ? null : "none")
+      .attr("x1", localAnchorX)
+      .attr("y1", localAnchorY)
+      .attr("x2", lineEndX)
+      .attr("y2", lineEndY);
+
+    placedBoxes.push({
+      left: centerX + rectX - 4,
+      top: centerY + rectY - 4,
+      right: centerX + rectX + rectWidth + 4,
+      bottom: centerY + rectY + rectHeight + 4,
+    });
+  });
+}
+
+function updateLabelScale(zoomLevel) {
+  if (!currentMapState.labelGroups) {
+    return;
+  }
+
+  const safeZoomLevel = Math.max(zoomLevel, 1);
+  currentMapState.labelGroups.attr("display", null).each(function () {
+    const group = d3.select(this);
+    const text = group.select("text");
+    const rect = group.select("rect");
+    const baseSize = Number(text.attr("data-base-size") || 8);
+    const baseStroke = Number(text.attr("data-base-stroke") || 3);
+    const centroidX = Number(group.attr("data-centroid-x") || 0);
+    const centroidY = Number(group.attr("data-centroid-y") || 0);
+    const anchorX = currentTransform.applyX(centroidX);
+    const anchorY = currentTransform.applyY(centroidY);
+    const zoomBoost = 1 + Math.log2(safeZoomLevel) * 0.31;
+    const nextFontSize = Math.min(Math.max(baseSize * zoomBoost, 9.8), 17.2);
+    const nextStrokeWidth = Math.min(Math.max(baseStroke * (0.92 + Math.log2(safeZoomLevel) * 0.2), 1.1), 2);
+
+    group
+      .attr("data-anchor-x", anchorX.toFixed(2))
+      .attr("data-anchor-y", anchorY.toFixed(2))
+      .attr("transform", `translate(${anchorX}, ${anchorY})`);
+
+    text
+      .attr("font-size", `${nextFontSize}px`)
+      .attr("stroke-width", `${nextStrokeWidth}px`);
+
+    const bbox = text.node().getBBox();
+    const horizontalPadding = Math.max(nextFontSize * 0.28, 3.2);
+    const verticalPadding = Math.max(nextFontSize * 0.14, 2.1);
+
+    rect
+      .attr("x", bbox.x - horizontalPadding)
+      .attr("y", bbox.y - verticalPadding)
+      .attr("width", bbox.width + horizontalPadding * 2)
+      .attr("height", bbox.height + verticalPadding * 2)
+      .attr("rx", Math.max(nextFontSize * 0.2, 3.2))
+      .attr("ry", Math.max(nextFontSize * 0.2, 3.2));
+  });
+
+  layoutProvinceLabels();
 }
 
 // Show a small status message while loading or when the file is missing.
@@ -423,62 +788,45 @@ function renderMap(geoData) {
   const path = d3.geoPath(projection);
   const mapLayer = mapSvg.append("g").attr("class", "map-layer");
   const provincesGroup = mapLayer.append("g");
-  const labelsGroup = mapLayer.append("g");
+  const labelsGroup = mapSvg.append("g").attr("class", "labels-layer");
+  const labelFeatures = Array.from(
+    geoData.features.reduce((featureMap, feature) => {
+      const provinceName = getProvinceName(feature);
+      const area = path.area(feature);
+      const existingEntry = featureMap.get(provinceName);
 
-  // Fit each label to the size of its province instead of using one global font size.
+      if (!existingEntry || area > existingEntry.area) {
+        featureMap.set(provinceName, { feature, area });
+      }
+
+      return featureMap;
+    }, new Map()).values(),
+    ({ feature }) => feature
+  );
+
   function getLabelMetrics(feature) {
     const provinceName = getProvinceName(feature);
+    const labelLines = getProvinceLabelLines(provinceName);
     const [[x0, y0], [x1, y1]] = path.bounds(feature);
     const provinceWidth = Math.max(x1 - x0, 1);
     const provinceHeight = Math.max(y1 - y0, 1);
     const provinceArea = Math.max(path.area(feature), 1);
+    const longestLineLength = Math.max(...labelLines.map((line) => line.length), 4);
 
-    const widthBasedSize = provinceWidth / Math.max(provinceName.length * 2.8, 6);
-    const heightBasedSize = provinceHeight * 0.09;
-    const areaBasedSize = Math.sqrt(provinceArea) * 0.09;
+    const widthBasedSize = provinceWidth / Math.max(longestLineLength * 1.12, 3.2);
+    const heightBasedSize = provinceHeight / Math.max(labelLines.length * 1.5, 1.8);
+    const areaBasedSize = Math.sqrt(provinceArea) * 0.28;
 
     const baseSize = Math.max(
       minLabelSize,
       Math.min(widthBasedSize, heightBasedSize, areaBasedSize, maxLabelSize)
     );
 
-    let minZoom = globalLabelZoom;
-
-    if (baseSize < 1.35) {
-      minZoom = 7;
-    } else if (baseSize < 1.6) {
-      minZoom = 6;
-    } else if (baseSize < 1.9) {
-      minZoom = 5;
-    }
-
     return {
       baseSize,
       baseStroke,
-      minZoom,
+      labelLines,
     };
-  }
-
-  // Keep label size readable even when the map is zoomed in.
-  function updateLabelScale(zoomLevel) {
-    const safeZoomLevel = Math.max(zoomLevel, 1);
-    const fontScale = safeZoomLevel ** labelScaleExponent;
-    const strokeScale = safeZoomLevel ** strokeScaleExponent;
-
-    labelsGroup
-      .selectAll("text")
-      .attr("display", function () {
-        const minZoom = Number(this.dataset.minZoom || globalLabelZoom);
-        return safeZoomLevel >= minZoom ? null : "none";
-      })
-      .attr("font-size", function () {
-        const baseSize = Number(this.dataset.baseSize || minLabelSize);
-        return `${Math.max(baseSize / fontScale, 0.45)}px`;
-      })
-      .attr("stroke-width", function () {
-        const baseStroke = Number(this.dataset.baseStroke || 1.1);
-        return `${Math.max(baseStroke / strokeScale, 0.08)}px`;
-      });
   }
 
   // Render one SVG path per province.
@@ -490,59 +838,61 @@ function renderMap(geoData) {
     .attr("fill", (feature) => getProvinceFill(feature))
     .attr("d", path)
     .attr("aria-label", (feature) => getProvinceName(feature))
-    .on("mouseenter", function (_, feature) {
-      const provinceName = getProvinceName(feature);
-      const isSelected = provinceName === selectedProvinceName;
-
-      d3.select(this)
-        .classed("is-hovered", true)
-        .attr("fill", isSelected ? getProvinceSelectedFill(feature) : getProvinceHoverFill(feature));
+    .on("mouseenter", (_, feature) => {
+      hoveredProvinceName = getProvinceName(feature);
+      updateProvinceVisualState();
+      updateLabelScale(currentTransform.k);
     })
-    .on("mouseleave", function (_, feature) {
-      const provinceName = getProvinceName(feature);
-      const isSelected = provinceName === selectedProvinceName;
-
-      d3.select(this)
-        .classed("is-hovered", false)
-        .attr("fill", isSelected ? getProvinceSelectedFill(feature) : getProvinceFill(feature));
+    .on("mouseleave", () => {
+      hoveredProvinceName = "";
+      updateProvinceVisualState();
+      updateLabelScale(currentTransform.k);
     })
     .on("click", (_, feature) => {
       const provinceName = getProvinceName(feature);
-      console.log(provinceName);
-      renderProvinceDetails(provinceName, feature);
-      provincePaths
-        .classed("is-selected", (item) => getProvinceName(item) === provinceName)
-        .attr("fill", (item) =>
-          getProvinceName(item) === provinceName ? getProvinceSelectedFill(item) : getProvinceFill(item)
-        );
+      selectProvince(provinceName, feature);
     });
 
-  provincePaths
-    .classed("is-selected", (feature) => getProvinceName(feature) === selectedProvinceName)
-    .attr("fill", (feature) =>
-      getProvinceName(feature) === selectedProvinceName ? getProvinceSelectedFill(feature) : getProvinceFill(feature)
-    );
-
-  // Place a text label at the center of each province.
-  labelsGroup
-    .selectAll("text")
-    .data(geoData.features)
-    .join("text")
-    .attr("class", "province-label")
-    .attr("x", (feature) => path.centroid(feature)[0])
-    .attr("y", (feature) => path.centroid(feature)[1])
-    .attr("dy", "0.35em")
+  const labelGroups = labelsGroup
+    .selectAll("g")
+    .data(labelFeatures)
+    .join((enter) => {
+      const group = enter.append("g").attr("class", "province-label-group");
+      group.append("line").attr("class", "province-label-leader");
+      group.append("rect").attr("class", "province-label-bg");
+      group.append("text").attr("class", "province-label");
+      return group;
+    })
+    .attr("transform", (feature) => {
+      const [x, y] = path.centroid(feature);
+      return `translate(${x}, ${y})`;
+    })
     .each(function (feature) {
-      const { baseSize, baseStroke, minZoom } = getLabelMetrics(feature);
-
-      d3.select(this)
+      const { baseSize, baseStroke, labelLines } = getLabelMetrics(feature);
+      const [centroidX, centroidY] = path.centroid(feature);
+      const text = d3.select(this)
+        .attr("data-centroid-x", centroidX.toFixed(2))
+        .attr("data-centroid-y", centroidY.toFixed(2))
+        .attr("data-area", path.area(feature).toFixed(2))
+        .select("text")
         .attr("data-base-size", baseSize.toFixed(2))
         .attr("data-base-stroke", baseStroke.toFixed(2))
-        .attr("data-min-zoom", minZoom.toFixed(2));
-    })
-    .text((feature) => getProvinceName(feature));
+        .attr("data-scale-exponent", labelScaleExponent.toFixed(2))
+        .attr("data-stroke-scale-exponent", strokeScaleExponent.toFixed(2))
+        .attr("font-size", `${baseSize}px`);
 
-  updateLabelScale(currentTransform.k);
+      text.selectAll("tspan").remove();
+
+      const topOffset = -((labelLines.length - 1) * 0.56);
+
+      labelLines.forEach((line, index) => {
+        text
+          .append("tspan")
+          .attr("x", 0)
+          .attr("dy", index === 0 ? `${topOffset}em` : "1.14em")
+          .text(line);
+      });
+    });
 
   // Enable zooming and dragging while keeping the map inside the SVG area.
   const zoom = d3
@@ -568,6 +918,18 @@ function renderMap(geoData) {
       mapSvg.classed("is-dragging", false);
     });
 
+  currentMapState = {
+    width,
+    height,
+    mapLayer,
+    provincePaths,
+    labelGroups,
+    path,
+    zoomBehavior: zoom,
+  };
+
+  updateProvinceVisualState();
+  updateLabelScale(currentTransform.k);
   mapSvg.call(zoom).call(zoom.transform, currentTransform);
 }
 
@@ -583,11 +945,10 @@ async function loadMap() {
     }
 
     thailandGeoData = geoData;
+    populateProvinceSearch(thailandGeoData.features);
     renderMap(thailandGeoData);
-    const defaultProvinceFeature = thailandGeoData.features.find(
-      (feature) => getProvinceName(feature) === selectedProvinceName
-    );
-    renderProvinceDetails(selectedProvinceName, defaultProvinceFeature);
+    const defaultProvinceFeature = getProvinceFeatureByName(selectedProvinceName);
+    selectProvince(selectedProvinceName, defaultProvinceFeature);
     setStatus("", false);
   } catch (error) {
     console.error("Unable to load Thailand GeoJSON:", error);
@@ -598,6 +959,19 @@ async function loadMap() {
   }
 }
 
+function handleProvinceSearch() {
+  const matchedFeature = getSearchMatch(provinceSearchInput.value);
+
+  if (!matchedFeature) {
+    setStatus("ไม่พบจังหวัดที่ค้นหา ลองพิมพ์ชื่อจังหวัดใหม่อีกครั้ง", true);
+    return;
+  }
+
+  setStatus("", false);
+  selectProvince(getProvinceName(matchedFeature), matchedFeature);
+  focusProvince(matchedFeature);
+}
+
 // Redraw the map when the layout changes so the SVG stays responsive.
 const resizeObserver = new ResizeObserver(() => {
   if (thailandGeoData) {
@@ -606,4 +980,15 @@ const resizeObserver = new ResizeObserver(() => {
 });
 
 resizeObserver.observe(frame);
+provinceSearchSubmitButton.addEventListener("click", handleProvinceSearch);
+provinceSearchInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    handleProvinceSearch();
+  }
+});
+resetViewButton.addEventListener("click", () => {
+  setStatus("", false);
+  resetMapView();
+});
 loadMap();

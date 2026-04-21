@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Thailand Map</title>
+    <title>จบมาเรียนไหนดี?</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,17 +17,50 @@
     <main class="page">
       <header class="page-header">
         <div class="page-header__main">
-          <p class="page-kicker">Thailand Province Explorer</p>
-          <h1 class="page-title">Thailand Map</h1>
+          <p class="page-kicker">จบมาเรียนไหนดี?</p>
+          <h1 class="page-title">จบมาเรียนไหนดี?</h1>
+          <p class="page-intro">
+            ค้นหาและเลือกจังหวัดจากแผนที่ เพื่อดูข้อมูลสรุปของพื้นที่ได้อย่างรวดเร็ว
+          </p>
         </div>
-        <p class="page-caption">คลิกจังหวัดเพื่อดูข้อมูลจำลองของพื้นที่</p>
+        <div class="page-header__stats" aria-label="Map overview">
+          <article class="header-stat">
+            <span class="header-stat__label">จังหวัดทั้งหมด</span>
+            <strong id="province-total" class="header-stat__value">กำลังโหลด...</strong>
+          </article>
+          <article class="header-stat">
+            <span class="header-stat__label">จังหวัดที่เลือก</span>
+            <strong id="selection-summary" class="header-stat__value">กรุงเทพมหานคร</strong>
+          </article>
+        </div>
       </header>
 
       <section class="workspace" aria-label="Thailand provinces map and information">
         <div class="map-panel">
           <div class="map-panel__head">
-            <p class="map-panel__eyebrow">Interactive Map</p>
-            <p class="map-panel__hint">Pan, zoom และเลือกจังหวัดได้</p>
+            <div class="map-panel__title-block">
+              <p class="map-panel__eyebrow">Map</p>
+              <p class="map-panel__headline">ค้นหา เลือก และสำรวจจังหวัด</p>
+            </div>
+
+            <div class="map-toolbar" aria-label="Map controls">
+              <label class="search-field" for="province-search">
+                <span class="search-field__label">ค้นหาจังหวัด</span>
+                <input
+                  id="province-search"
+                  class="search-field__input"
+                  type="search"
+                  list="province-options"
+                  placeholder="เช่น เชียงใหม่, ชลบุรี, ภูเก็ต"
+                  autocomplete="off"
+                />
+              </label>
+              <datalist id="province-options"></datalist>
+              <button id="province-search-submit" class="toolbar-button toolbar-button--primary" type="button">
+                ไปยังจังหวัด
+              </button>
+              <button id="reset-view" class="toolbar-button" type="button">รีเซ็ตมุมมอง</button>
+            </div>
           </div>
 
           <div class="map-frame">
@@ -45,7 +78,7 @@
         <aside class="detail-card" aria-label="Province information">
           <div class="detail-card__head">
             <span id="province-chip" class="detail-card__chip">กรุงเทพมหานคร</span>
-            <p class="detail-card__eyebrow">Mock Province Data</p>
+            <p class="detail-card__eyebrow">Province Summary</p>
           </div>
 
           <div class="detail-card__body">
@@ -57,22 +90,22 @@
 
           <div class="detail-card__stats">
             <article class="mini-stat">
-              <span class="mini-stat__label">Region</span>
+              <span class="mini-stat__label">ภูมิภาค</span>
               <strong id="province-region" class="mini-stat__value">ภาคกลาง</strong>
             </article>
             <article class="mini-stat">
-              <span class="mini-stat__label">Institutions</span>
+              <span class="mini-stat__label">จำนวนสถาบัน</span>
               <strong id="province-count" class="mini-stat__value">4 แห่ง</strong>
             </article>
             <article class="mini-stat">
-              <span class="mini-stat__label">Updated</span>
+              <span class="mini-stat__label">อัปเดตล่าสุด</span>
               <strong id="province-updated" class="mini-stat__value">Demo data</strong>
             </article>
           </div>
 
           <div class="detail-card__list">
             <div class="detail-card__list-head">
-              <p class="detail-card__list-eyebrow">Institution Directory</p>
+              <p class="detail-card__list-eyebrow">Institution List</p>
               <h3 class="detail-card__list-title">รายชื่อสถาบัน</h3>
             </div>
             <ul id="institution-list" class="institution-list"></ul>
