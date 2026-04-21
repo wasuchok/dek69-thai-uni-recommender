@@ -22,6 +22,8 @@ const clearFiltersButton = document.querySelector("#clear-filters");
 const VISITOR_COUNTER_NAMESPACE = "job-ma-rien-tee-nai";
 const VISITOR_COUNTER_KEY = "web-total-visits";
 const LOCAL_VISITOR_COUNTER_KEY = "job-ma-rien-tee-nai-local-visits";
+const VISITOR_COUNTER_CACHE_KEY = "job-ma-rien-tee-nai-global-visits-cache";
+const VISITOR_COUNTER_TIMEOUT_MS = 2500;
 
 let thailandGeoData = null;
 let recommenderData = null;
@@ -968,29 +970,79 @@ function increaseLocalVisitorCount() {
   return nextCount;
 }
 
+function getCachedGlobalVisitorCount() {
+  const cachedCount = Number(localStorage.getItem(VISITOR_COUNTER_CACHE_KEY) || "0");
+  if (!Number.isFinite(cachedCount) || cachedCount <= 0) {
+    return null;
+  }
+  return cachedCount;
+}
+
+function setCachedGlobalVisitorCount(count) {
+  if (!Number.isFinite(count) || count <= 0) {
+    return;
+  }
+  localStorage.setItem(VISITOR_COUNTER_CACHE_KEY, String(Math.round(count)));
+}
+
+async function fetchVisitorCountFromCounterApi() {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), VISITOR_COUNTER_TIMEOUT_MS);
+
+  try {
+    const endpoint = `https://api.counterapi.dev/v1/${encodeURIComponent(VISITOR_COUNTER_NAMESPACE)}/${encodeURIComponent(VISITOR_COUNTER_KEY)}/up`;
+    const response = await fetch(endpoint, {
+      cache: "no-store",
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`CounterAPI request failed: ${response.status}`);
+    }
+
+    const payload = await response.json();
+    const nextCount = Number(payload?.value);
+
+    if (!Number.isFinite(nextCount) || nextCount <= 0) {
+      throw new Error("CounterAPI payload is invalid.");
+    }
+
+    return nextCount;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function updateVisitorCount() {
   if (!visitorCountElement) {
     return;
   }
 
-  setVisitorCountText("กำลังโหลด...");
+  const cachedCount = getCachedGlobalVisitorCount();
+  if (cachedCount) {
+    setVisitorCountText(
+      `${cachedCount.toLocaleString("th-TH")} ครั้ง`,
+      "แสดงค่าล่าสุดที่เคยโหลดได้ (อาจไม่ใช่เวลาจริง)"
+    );
+  } else {
+    setVisitorCountText("กำลังโหลด...");
+  }
 
   try {
-    const endpoint = `https://api.countapi.xyz/hit/${encodeURIComponent(VISITOR_COUNTER_NAMESPACE)}/${encodeURIComponent(VISITOR_COUNTER_KEY)}`;
-    const response = await fetch(endpoint, { cache: "no-store" });
-
-    if (!response.ok) {
-      throw new Error(`Visitor count request failed: ${response.status}`);
-    }
-
-    const payload = await response.json();
-    if (typeof payload.value !== "number") {
-      throw new Error("Visitor count payload is invalid.");
-    }
-
-    setVisitorCountText(`${payload.value.toLocaleString("th-TH")} ครั้ง`);
+    const latestCount = await fetchVisitorCountFromCounterApi();
+    setCachedGlobalVisitorCount(latestCount);
+    setVisitorCountText(`${latestCount.toLocaleString("th-TH")} ครั้ง`, "นับจาก CounterAPI");
   } catch (error) {
-    console.error("Unable to load global visitor count:", error);
+    console.error("Unable to load global visitor count from CounterAPI:", error);
+
+    if (cachedCount) {
+      setVisitorCountText(
+        `${cachedCount.toLocaleString("th-TH")} ครั้ง`,
+        "แสดงค่าล่าสุดที่เคยโหลดได้ (CounterAPI ไม่พร้อมใช้งาน)"
+      );
+      return;
+    }
+
     const localCount = increaseLocalVisitorCount();
     setVisitorCountText(
       `${localCount.toLocaleString("th-TH")} ครั้ง`,
