@@ -20,18 +20,8 @@
           <p class="page-kicker">จบมาเรียนไหนดี?</p>
           <h1 class="page-title">จบมาเรียนไหนดี?</h1>
           <p class="page-intro">
-            ค้นหาและเลือกจังหวัดจากแผนที่ เพื่อดูข้อมูลสรุปของพื้นที่ได้อย่างรวดเร็ว
+            เลือกสายการเรียน งบประมาณ และพื้นที่ที่สนใจ เพื่อดูคำแนะนำสถาบันจากชุดข้อมูลจริงของภาครัฐ
           </p>
-        </div>
-        <div class="page-header__stats" aria-label="Map overview">
-          <article class="header-stat">
-            <span class="header-stat__label">จังหวัดทั้งหมด</span>
-            <strong id="province-total" class="header-stat__value">กำลังโหลด...</strong>
-          </article>
-          <article class="header-stat">
-            <span class="header-stat__label">จังหวัดที่เลือก</span>
-            <strong id="selection-summary" class="header-stat__value">กรุงเทพมหานคร</strong>
-          </article>
         </div>
       </header>
 
@@ -59,8 +49,30 @@
               <button id="province-search-submit" class="toolbar-button toolbar-button--primary" type="button">
                 ไปยังจังหวัด
               </button>
-              <button id="reset-view" class="toolbar-button" type="button">รีเซ็ตมุมมอง</button>
+              <button id="reset-view" class="toolbar-button" type="button">รีเซ็ตแผนที่</button>
             </div>
+          </div>
+
+          <div class="recommender-controls" aria-label="Recommendation filters">
+            <label class="filter-field" for="study-track">
+              <span class="filter-field__label">สายการเรียน</span>
+              <select id="study-track" class="filter-field__select">
+                <option value="all">ทั้งหมด</option>
+              </select>
+            </label>
+            <label class="filter-field" for="budget-filter">
+              <span class="filter-field__label">งบประมาณต่อปี</span>
+              <select id="budget-filter" class="filter-field__select">
+                <option value="all">ทั้งหมด</option>
+              </select>
+            </label>
+            <label class="filter-field" for="area-filter">
+              <span class="filter-field__label">พื้นที่</span>
+              <select id="area-filter" class="filter-field__select">
+                <option value="all">ทุกพื้นที่</option>
+              </select>
+            </label>
+            <button id="clear-filters" class="toolbar-button" type="button">ล้างตัวกรอง</button>
           </div>
 
           <div class="map-frame">
@@ -77,36 +89,36 @@
 
         <aside class="detail-card" aria-label="Province information">
           <div class="detail-card__head">
-            <span id="province-chip" class="detail-card__chip">กรุงเทพมหานคร</span>
-            <p class="detail-card__eyebrow">Province Summary</p>
+            <span id="province-chip" class="detail-card__chip">ทุกพื้นที่</span>
+            <p class="detail-card__eyebrow">Recommendation Summary</p>
           </div>
 
           <div class="detail-card__body">
-            <h2 id="province-name" class="detail-card__title">กรุงเทพมหานคร</h2>
+            <h2 id="province-name" class="detail-card__title">สถาบันที่แนะนำ</h2>
             <p id="province-description" class="detail-card__description">
-              ตัวอย่างข้อมูลจำลองสำหรับทดลองคลิกจังหวัดบนแผนที่และดูรายละเอียดสถาบันในพื้นที่
+              ระบบกำลังประมวลผลคำแนะนำจากข้อมูลจริง กรุณาเลือกตัวกรองที่ต้องการ
             </p>
           </div>
 
           <div class="detail-card__stats">
             <article class="mini-stat">
-              <span class="mini-stat__label">ภูมิภาค</span>
-              <strong id="province-region" class="mini-stat__value">ภาคกลาง</strong>
+              <span class="mini-stat__label">พื้นที่ที่เลือก</span>
+              <strong id="province-region" class="mini-stat__value">ทุกพื้นที่</strong>
             </article>
             <article class="mini-stat">
-              <span class="mini-stat__label">จำนวนสถาบัน</span>
-              <strong id="province-count" class="mini-stat__value">4 แห่ง</strong>
+              <span class="mini-stat__label">ผลลัพธ์ที่พบ</span>
+              <strong id="province-count" class="mini-stat__value">-</strong>
             </article>
             <article class="mini-stat">
-              <span class="mini-stat__label">อัปเดตล่าสุด</span>
-              <strong id="province-updated" class="mini-stat__value">Demo data</strong>
+              <span class="mini-stat__label">แหล่งข้อมูล</span>
+              <strong id="province-updated" class="mini-stat__value">MHESI Open Data</strong>
             </article>
           </div>
 
           <div class="detail-card__list">
             <div class="detail-card__list-head">
-              <p class="detail-card__list-eyebrow">Institution List</p>
-              <h3 class="detail-card__list-title">รายชื่อสถาบัน</h3>
+              <p class="detail-card__list-eyebrow">Recommended Institutions</p>
+              <h3 class="detail-card__list-title">รายชื่อสถาบันแนะนำ</h3>
             </div>
             <ul id="institution-list" class="institution-list"></ul>
           </div>

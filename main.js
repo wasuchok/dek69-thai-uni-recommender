@@ -1,4 +1,5 @@
 const GEOJSON_PATH = "/data/thailand.geojson";
+const RECOMMENDER_DATA_PATH = "/data/recommender_dataset.json";
 const mapSvg = d3.select("#map");
 const statusText = document.querySelector("#status");
 const frame = document.querySelector(".map-frame");
@@ -13,13 +14,22 @@ const provinceSearchInput = document.querySelector("#province-search");
 const provinceOptionsElement = document.querySelector("#province-options");
 const provinceSearchSubmitButton = document.querySelector("#province-search-submit");
 const resetViewButton = document.querySelector("#reset-view");
-const provinceTotalElement = document.querySelector("#province-total");
-const selectionSummaryElement = document.querySelector("#selection-summary");
+const studyTrackSelect = document.querySelector("#study-track");
+const budgetFilterSelect = document.querySelector("#budget-filter");
+const areaFilterSelect = document.querySelector("#area-filter");
+const clearFiltersButton = document.querySelector("#clear-filters");
 
 let thailandGeoData = null;
+let recommenderData = null;
 let currentTransform = d3.zoomIdentity;
-let selectedProvinceName = "กรุงเทพมหานคร";
+let selectedProvinceName = "";
 let hoveredProvinceName = "";
+let currentAreaFilterLabel = "ทุกพื้นที่";
+let currentFilters = {
+  track: "all",
+  budget: "all",
+  area: "all",
+};
 let currentMapState = {
   width: 0,
   height: 0,
@@ -97,60 +107,6 @@ const REGION_LABELS = {
   west: "ภาคตะวันตก",
   south: "ภาคใต้",
   unknown: "ไม่ระบุภูมิภาค",
-};
-
-const MOCK_PROVINCE_DATA = {
-  กรุงเทพมหานคร: {
-    description:
-      "จังหวัดตัวอย่างสำหรับเดโมข้อมูลสถาบันในเมืองใหญ่ โดยเน้นสถาบันอุดมศึกษา โรงพยาบาล และหน่วยงานภาครัฐ",
-    updatedAt: "Updated just now",
-    institutions: [
-      { name: "จุฬาลงกรณ์มหาวิทยาลัย", type: "มหาวิทยาลัย" },
-      { name: "มหาวิทยาลัยธรรมศาสตร์ ศูนย์ท่าพระจันทร์", type: "มหาวิทยาลัย" },
-      { name: "โรงพยาบาลศิริราช", type: "โรงพยาบาล" },
-      { name: "ศูนย์เยาวชนกรุงเทพมหานคร (ไทย-ญี่ปุ่น)", type: "ศูนย์บริการสาธารณะ" },
-    ],
-  },
-  เชียงใหม่: {
-    description: "ตัวอย่างข้อมูลสถาบันเด่นในจังหวัดเชียงใหม่สำหรับทดสอบการแสดงผลรายการ",
-    updatedAt: "Updated 2 mins ago",
-    institutions: [
-      { name: "มหาวิทยาลัยเชียงใหม่", type: "มหาวิทยาลัย" },
-      { name: "มหาวิทยาลัยแม่โจ้", type: "มหาวิทยาลัย" },
-      { name: "โรงพยาบาลมหาราชนครเชียงใหม่", type: "โรงพยาบาล" },
-      { name: "อุทยานวิทยาศาสตร์ภาคเหนือ", type: "ศูนย์วิจัยและนวัตกรรม" },
-    ],
-  },
-  ขอนแก่น: {
-    description: "ตัวอย่างข้อมูลของจังหวัดศูนย์กลางภาคอีสาน เหมาะสำหรับเดโมสถาบันการศึกษาและสุขภาพ",
-    updatedAt: "Updated 5 mins ago",
-    institutions: [
-      { name: "มหาวิทยาลัยขอนแก่น", type: "มหาวิทยาลัย" },
-      { name: "โรงพยาบาลศรีนครินทร์", type: "โรงพยาบาล" },
-      { name: "วิทยาลัยอาชีวศึกษาขอนแก่น", type: "วิทยาลัย" },
-      { name: "ศูนย์ประชุมและแสดงสินค้านานาชาติ ขอนแก่น", type: "ศูนย์ประชุม" },
-    ],
-  },
-  ชลบุรี: {
-    description: "ตัวอย่างข้อมูลจังหวัดเศรษฐกิจภาคตะวันออก พร้อมรายชื่อสถาบันสำหรับเดโม",
-    updatedAt: "Updated 8 mins ago",
-    institutions: [
-      { name: "มหาวิทยาลัยบูรพา", type: "มหาวิทยาลัย" },
-      { name: "โรงพยาบาลชลบุรี", type: "โรงพยาบาล" },
-      { name: "วิทยาลัยเทคนิคพัทยา", type: "วิทยาลัย" },
-      { name: "ศูนย์การเรียนรู้ EEC", type: "ศูนย์เรียนรู้" },
-    ],
-  },
-  ภูเก็ต: {
-    description: "ตัวอย่างข้อมูลจังหวัดท่องเที่ยวภาคใต้ พร้อมสถาบันสำคัญเพื่อใช้จำลองหน้ารายละเอียด",
-    updatedAt: "Updated 12 mins ago",
-    institutions: [
-      { name: "มหาวิทยาลัยสงขลานครินทร์ วิทยาเขตภูเก็ต", type: "มหาวิทยาลัย" },
-      { name: "โรงพยาบาลวชิระภูเก็ต", type: "โรงพยาบาล" },
-      { name: "วิทยาลัยอาชีวศึกษาภูเก็ต", type: "วิทยาลัย" },
-      { name: "ศูนย์นวัตกรรมการท่องเที่ยวภูเก็ต", type: "ศูนย์นวัตกรรม" },
-    ],
-  },
 };
 
 // Group provinces by region so the map feels more readable and colorful.
@@ -317,6 +273,38 @@ const THAI_PROVINCE_NAMES = {
   Yasothon: "ยโสธร",
 };
 
+const TRACK_LABELS = {
+  engineering: "วิศวกรรม-อุตสาหกรรม",
+  health: "สุขภาพ-การแพทย์",
+  science: "วิทย์-เทคโนโลยี",
+  business: "ธุรกิจ-บริหาร-บัญชี",
+  education: "ครุศาสตร์-ศึกษาศาสตร์",
+  arts_media: "ศิลปะ-สื่อ-ออกแบบ",
+  social_human: "มนุษยศาสตร์-ภาษา-สังคม",
+  law_politics: "นิติศาสตร์-รัฐศาสตร์",
+  agri_env: "เกษตร-อาหาร-สิ่งแวดล้อม",
+  service_tourism: "บริการ-ท่องเที่ยว",
+  other: "อื่น ๆ",
+};
+
+const BUDGET_FALLBACK_LABELS = {
+  low: "ประหยัด",
+  medium: "ปานกลาง",
+  high: "งบสูง",
+  unknown: "ไม่ระบุงบประมาณ",
+};
+
+const THAI_PROVINCE_TO_REGION = Object.entries(THAI_PROVINCE_NAMES).reduce(
+  (provinceMap, [englishName, thaiName]) => {
+    const normalizedEnglishName = normalizeProvinceLookupName(englishName);
+    const normalizedThaiName = normalizeProvinceLookupName(thaiName);
+    const region = PROVINCE_REGIONS[normalizedEnglishName] ?? "unknown";
+    provinceMap[normalizedThaiName] = region;
+    return provinceMap;
+  },
+  {}
+);
+
 const PROVINCE_LABEL_LINE_BREAKS = {
   กรุงเทพมหานคร: ["กรุงเทพ", "มหานคร"],
   ฉะเชิงเทรา: ["ฉะเชิง", "เทรา"],
@@ -393,45 +381,242 @@ function getProvinceRegionLabel(feature) {
   return REGION_LABELS[regionKey] ?? REGION_LABELS.unknown;
 }
 
-function createFallbackProvinceData(provinceName, regionLabel) {
-  return {
-    description: `ข้อมูลจำลองของจังหวัด${provinceName} สำหรับทดสอบ flow การกดจังหวัดแล้วแสดงรายละเอียดด้านข้าง`,
-    updatedAt: "Demo generated",
-    institutions: [
-      { name: `สำนักงานศึกษาธิการจังหวัด${provinceName}`, type: "หน่วยงานภาครัฐ" },
-      { name: `โรงพยาบาลประจำจังหวัด${provinceName}`, type: "โรงพยาบาล" },
-      { name: `วิทยาลัยอาชีวศึกษาจังหวัด${provinceName}`, type: "วิทยาลัย" },
-      { name: `ศูนย์บริการประชาชน${provinceName}`, type: `ศูนย์บริการ ${regionLabel}` },
-    ],
-  };
+function getRegionKeyFromProvinceName(provinceName) {
+  return THAI_PROVINCE_TO_REGION[normalizeProvinceLookupName(provinceName)] ?? "unknown";
 }
 
-// Render the selected province's mock detail data into the side panel.
-function renderProvinceDetails(provinceName, feature) {
-  const regionLabel = feature ? getProvinceRegionLabel(feature) : REGION_LABELS.unknown;
-  const provinceData =
-    MOCK_PROVINCE_DATA[provinceName] ?? createFallbackProvinceData(provinceName, regionLabel);
+function formatNumber(value) {
+  return Number(value ?? 0).toLocaleString("th-TH");
+}
 
-  selectedProvinceName = provinceName;
-  provinceChipElement.textContent = provinceName;
-  provinceNameElement.textContent = provinceName;
-  provinceDescriptionElement.textContent = provinceData.description;
-  provinceRegionElement.textContent = regionLabel;
-  provinceCountElement.textContent = `${provinceData.institutions.length} แห่ง`;
-  provinceUpdatedElement.textContent = provinceData.updatedAt;
-  selectionSummaryElement.textContent = provinceName;
+function formatBudget(value) {
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    return "ไม่ระบุ";
+  }
+
+  return `${Math.round(value).toLocaleString("th-TH")} บาท/ปี`;
+}
+
+function getTrackLabel(trackId) {
+  return TRACK_LABELS[trackId] ?? TRACK_LABELS.other;
+}
+
+function getSelectedTrackLabel() {
+  if (currentFilters.track === "all") {
+    return "ทุกสาย";
+  }
+
+  return getTrackLabel(currentFilters.track);
+}
+
+function getSelectedBudgetLabel() {
+  if (currentFilters.budget === "all") {
+    return "ทุกช่วงงบ";
+  }
+
+  const budgetBands = recommenderData?.budgetBands ?? [];
+  const budgetMatch = budgetBands.find((budget) => budget.id === currentFilters.budget);
+  return budgetMatch?.label ?? BUDGET_FALLBACK_LABELS[currentFilters.budget] ?? "ไม่ระบุงบ";
+}
+
+function getAreaLabelByFilterValue(areaValue) {
+  if (!areaValue || areaValue === "all") {
+    return "ทุกพื้นที่";
+  }
+
+  if (areaValue.startsWith("province:")) {
+    return areaValue.replace("province:", "");
+  }
+
+  if (areaValue.startsWith("region:")) {
+    const regionKey = areaValue.replace("region:", "");
+    return REGION_LABELS[regionKey] ?? REGION_LABELS.unknown;
+  }
+
+  return "ทุกพื้นที่";
+}
+
+function getTrackStudentCount(institution, trackId) {
+  if (!trackId || trackId === "all") {
+    return institution.totalStudents ?? 0;
+  }
+
+  const matchedTrack = (institution.tracks ?? []).find((track) => track.id === trackId);
+  return matchedTrack?.students ?? 0;
+}
+
+function matchesAreaFilter(institution, areaFilterValue) {
+  if (!areaFilterValue || areaFilterValue === "all") {
+    return true;
+  }
+
+  if (areaFilterValue.startsWith("province:")) {
+    return institution.province === areaFilterValue.replace("province:", "");
+  }
+
+  if (areaFilterValue.startsWith("region:")) {
+    const regionKey = areaFilterValue.replace("region:", "");
+    return getRegionKeyFromProvinceName(institution.province) === regionKey;
+  }
+
+  return true;
+}
+
+function buildRecommendationResults() {
+  if (!recommenderData?.institutions?.length) {
+    return [];
+  }
+
+  const filteredInstitutions = recommenderData.institutions.filter((institution) => {
+    const matchesArea = matchesAreaFilter(institution, currentFilters.area);
+    const matchesTrack =
+      currentFilters.track === "all" || getTrackStudentCount(institution, currentFilters.track) > 0;
+    const matchesBudget =
+      currentFilters.budget === "all" || institution.budgetBand === currentFilters.budget;
+
+    return matchesArea && matchesTrack && matchesBudget;
+  });
+
+  return filteredInstitutions
+    .slice()
+    .sort((left, right) => {
+      const leftTrackStudents = getTrackStudentCount(left, currentFilters.track);
+      const rightTrackStudents = getTrackStudentCount(right, currentFilters.track);
+
+      if (rightTrackStudents !== leftTrackStudents) {
+        return rightTrackStudents - leftTrackStudents;
+      }
+
+      if ((right.totalStudents ?? 0) !== (left.totalStudents ?? 0)) {
+        return (right.totalStudents ?? 0) - (left.totalStudents ?? 0);
+      }
+
+      return left.name.localeCompare(right.name, "th");
+    })
+    .slice(0, 20);
+}
+
+function renderRecommendations() {
+  const recommendations = buildRecommendationResults();
+  currentAreaFilterLabel = getAreaLabelByFilterValue(currentFilters.area);
+
+  provinceChipElement.textContent = currentAreaFilterLabel;
+  provinceNameElement.textContent = "สถาบันที่แนะนำ";
+  provinceDescriptionElement.textContent = `กรองด้วย ${getSelectedTrackLabel()} · ${getSelectedBudgetLabel()} · ${currentAreaFilterLabel}`;
+  provinceRegionElement.textContent = currentAreaFilterLabel;
+  provinceCountElement.textContent = `${formatNumber(recommendations.length)} แห่ง`;
+  provinceUpdatedElement.textContent = "MHESI Open Data";
 
   institutionListElement.replaceChildren();
 
-  provinceData.institutions.forEach((institution) => {
+  if (!recommendations.length) {
+    const listItem = document.createElement("li");
+    listItem.className = "institution-list__item";
+    listItem.innerHTML = `
+      <span class="institution-list__name">ไม่พบสถาบันที่ตรงตัวกรอง</span>
+      <span class="institution-list__type">ลองเปลี่ยนสายเรียน งบประมาณ หรือพื้นที่</span>
+    `;
+    institutionListElement.appendChild(listItem);
+    return;
+  }
+
+  recommendations.forEach((institution) => {
+    const topTrack = institution.tracks?.[0]?.id ?? "other";
+    const topProgram = institution.topPrograms?.[0]?.name ?? "ไม่ระบุหลักสูตรเด่น";
     const listItem = document.createElement("li");
     listItem.className = "institution-list__item";
     listItem.innerHTML = `
       <span class="institution-list__name">${institution.name}</span>
-      <span class="institution-list__type">${institution.type}</span>
+      <span class="institution-list__type">${institution.universityType}</span>
+      <span class="institution-list__meta">${institution.province} · จำนวนนักศึกษา ${formatNumber(institution.totalStudents)}</span>
+      <span class="institution-list__track">สายเด่น: ${getTrackLabel(topTrack)} · หลักสูตรเด่น: ${topProgram}</span>
+      <span class="institution-list__budget">ต้นทุนต่อหัวต่อปี: ${formatBudget(institution.budgetMedianPerYear)}</span>
     `;
     institutionListElement.appendChild(listItem);
   });
+}
+
+function populateFilterOptions() {
+  if (!recommenderData) {
+    return;
+  }
+
+  studyTrackSelect.replaceChildren();
+  budgetFilterSelect.replaceChildren();
+  areaFilterSelect.replaceChildren();
+
+  const allTrackOption = document.createElement("option");
+  allTrackOption.value = "all";
+  allTrackOption.textContent = "ทั้งหมด";
+  studyTrackSelect.appendChild(allTrackOption);
+
+  recommenderData.tracks.forEach((track) => {
+    const option = document.createElement("option");
+    option.value = track.id;
+    option.textContent = track.label;
+    studyTrackSelect.appendChild(option);
+  });
+
+  const allBudgetOption = document.createElement("option");
+  allBudgetOption.value = "all";
+  allBudgetOption.textContent = "ทั้งหมด";
+  budgetFilterSelect.appendChild(allBudgetOption);
+
+  recommenderData.budgetBands.forEach((budget) => {
+    const option = document.createElement("option");
+    option.value = budget.id;
+    option.textContent = budget.label;
+    budgetFilterSelect.appendChild(option);
+  });
+
+  const allAreaOption = document.createElement("option");
+  allAreaOption.value = "all";
+  allAreaOption.textContent = "ทุกพื้นที่";
+  areaFilterSelect.appendChild(allAreaOption);
+
+  const regionOrder = ["north", "northeast", "central", "east", "west", "south"];
+  const regionValues = Array.from(
+    new Set(
+      recommenderData.institutions
+        .map((institution) => getRegionKeyFromProvinceName(institution.province))
+        .filter((region) => region !== "unknown")
+    )
+  ).sort((left, right) => regionOrder.indexOf(left) - regionOrder.indexOf(right));
+
+  regionValues.forEach((region) => {
+    const option = document.createElement("option");
+    option.value = `region:${region}`;
+    option.textContent = REGION_LABELS[region] ?? region;
+    areaFilterSelect.appendChild(option);
+  });
+
+  const provinceValues = Array.from(
+    new Set(
+      recommenderData.institutions
+        .map((institution) => institution.province)
+        .filter((provinceName) => provinceName)
+    )
+  ).sort((left, right) => left.localeCompare(right, "th"));
+
+  provinceValues.forEach((provinceName) => {
+    const option = document.createElement("option");
+    option.value = `province:${provinceName}`;
+    option.textContent = provinceName;
+    areaFilterSelect.appendChild(option);
+  });
+
+  studyTrackSelect.value = currentFilters.track;
+  budgetFilterSelect.value = currentFilters.budget;
+  areaFilterSelect.value = currentFilters.area;
+}
+
+function applyRecommendationFilters() {
+  currentFilters = {
+    track: studyTrackSelect.value || "all",
+    budget: budgetFilterSelect.value || "all",
+    area: areaFilterSelect.value || "all",
+  };
+  renderRecommendations();
 }
 
 function getProvinceFeatureByName(provinceName) {
@@ -494,7 +679,6 @@ function populateProvinceSearch(features) {
     provinceOptionsElement.appendChild(option);
   });
 
-  provinceTotalElement.textContent = `${provinceNames.length} จังหวัด`;
 }
 
 function updateProvinceVisualState() {
@@ -524,7 +708,7 @@ function updateProvinceVisualState() {
     .classed("is-selected", (feature) => getProvinceName(feature) === selectedProvinceName);
 }
 
-function selectProvince(provinceName, feature = null) {
+function selectProvince(provinceName, feature = null, syncAreaFilter = true) {
   const matchedFeature = feature ?? getProvinceFeatureByName(provinceName);
 
   if (!matchedFeature) {
@@ -532,8 +716,14 @@ function selectProvince(provinceName, feature = null) {
   }
 
   hoveredProvinceName = "";
-  renderProvinceDetails(provinceName, matchedFeature);
+  selectedProvinceName = provinceName;
   provinceSearchInput.value = provinceName;
+
+  if (syncAreaFilter && areaFilterSelect.querySelector(`option[value="province:${provinceName}"]`)) {
+    areaFilterSelect.value = `province:${provinceName}`;
+  }
+
+  applyRecommendationFilters();
   updateProvinceVisualState();
   updateLabelScale(currentTransform.k);
 }
@@ -933,27 +1123,77 @@ function renderMap(geoData) {
   mapSvg.call(zoom).call(zoom.transform, currentTransform);
 }
 
-// Load the local GeoJSON file and render it once it is available.
+function normalizeInstitutionNameForMatch(name) {
+  return String(name ?? "")
+    .replace(/\s*\([^)]*\)\s*/g, "")
+    .replace(/\s+/g, "")
+    .trim();
+}
+
+function enrichInstitutionsWithRegions(dataset) {
+  const institutions = dataset?.institutions ?? [];
+  const provinceLookup = new Map();
+
+  institutions.forEach((institution) => {
+    provinceLookup.set(normalizeInstitutionNameForMatch(institution.name), institution.province);
+  });
+
+  return institutions.map((institution) => {
+    if (institution.province) {
+      return institution;
+    }
+
+    const matchedProvince =
+      provinceLookup.get(normalizeInstitutionNameForMatch(institution.name)) ?? "ไม่ระบุจังหวัด";
+
+    return {
+      ...institution,
+      province: matchedProvince,
+    };
+  });
+}
+
+// Load map + recommendation dataset and render once both are available.
 async function loadMap() {
-  setStatus("Loading Thailand map...", true);
+  setStatus("กำลังโหลดแผนที่และข้อมูลแนะนำ...", true);
 
   try {
-    const geoData = await d3.json(GEOJSON_PATH);
+    const [geoData, dataset] = await Promise.all([
+      d3.json(GEOJSON_PATH),
+      d3.json(RECOMMENDER_DATA_PATH),
+    ]);
 
     if (!geoData?.features?.length) {
       throw new Error("GeoJSON file does not contain any features.");
     }
 
+    if (!dataset?.institutions?.length) {
+      throw new Error("Recommendation dataset is empty.");
+    }
+
     thailandGeoData = geoData;
+    recommenderData = {
+      ...dataset,
+      institutions: enrichInstitutionsWithRegions(dataset),
+    };
+
     populateProvinceSearch(thailandGeoData.features);
+    populateFilterOptions();
+    studyTrackSelect.value = "all";
+    budgetFilterSelect.value = "all";
+    areaFilterSelect.value = "all";
+    applyRecommendationFilters();
     renderMap(thailandGeoData);
+
     const defaultProvinceFeature = getProvinceFeatureByName(selectedProvinceName);
-    selectProvince(selectedProvinceName, defaultProvinceFeature);
+    if (defaultProvinceFeature) {
+      selectProvince(selectedProvinceName, defaultProvinceFeature, true);
+    }
     setStatus("", false);
   } catch (error) {
-    console.error("Unable to load Thailand GeoJSON:", error);
+    console.error("Unable to load map/recommendation data:", error);
     setStatus(
-      "Unable to load /data/thailand.geojson. Please place the file in the data folder and run this project with a local server.",
+      "โหลดข้อมูลไม่สำเร็จ ตรวจสอบไฟล์ /data/thailand.geojson และ /data/recommender_dataset.json แล้วลองใหม่อีกครั้ง",
       true
     );
   }
@@ -990,5 +1230,41 @@ provinceSearchInput.addEventListener("keydown", (event) => {
 resetViewButton.addEventListener("click", () => {
   setStatus("", false);
   resetMapView();
+  areaFilterSelect.value = "all";
+  selectedProvinceName = "";
+  provinceSearchInput.value = "";
+  updateProvinceVisualState();
+  applyRecommendationFilters();
+});
+studyTrackSelect.addEventListener("change", applyRecommendationFilters);
+budgetFilterSelect.addEventListener("change", applyRecommendationFilters);
+areaFilterSelect.addEventListener("change", () => {
+  currentFilters.area = areaFilterSelect.value || "all";
+  const selectedArea = areaFilterSelect.value;
+
+  if (selectedArea.startsWith("province:")) {
+    const provinceName = selectedArea.replace("province:", "");
+    const matchedFeature = getProvinceFeatureByName(provinceName);
+    if (matchedFeature) {
+      selectedProvinceName = provinceName;
+      provinceSearchInput.value = provinceName;
+      updateProvinceVisualState();
+      focusProvince(matchedFeature);
+    }
+  } else {
+    selectedProvinceName = "";
+    updateProvinceVisualState();
+  }
+
+  applyRecommendationFilters();
+});
+clearFiltersButton.addEventListener("click", () => {
+  studyTrackSelect.value = "all";
+  budgetFilterSelect.value = "all";
+  areaFilterSelect.value = "all";
+  selectedProvinceName = "";
+  provinceSearchInput.value = "";
+  updateProvinceVisualState();
+  applyRecommendationFilters();
 });
 loadMap();
