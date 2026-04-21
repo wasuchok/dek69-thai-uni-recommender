@@ -3,6 +3,7 @@ const RECOMMENDER_DATA_PATH = "/data/recommender_dataset.json";
 const mapSvg = d3.select("#map");
 const statusText = document.querySelector("#status");
 const frame = document.querySelector(".map-frame");
+const visitorCountElement = document.querySelector("#visitor-count");
 const provinceNameElement = document.querySelector("#province-name");
 const provinceDescriptionElement = document.querySelector("#province-description");
 const provinceRegionElement = document.querySelector("#province-region");
@@ -18,6 +19,9 @@ const studyTrackSelect = document.querySelector("#study-track");
 const budgetFilterSelect = document.querySelector("#budget-filter");
 const areaFilterSelect = document.querySelector("#area-filter");
 const clearFiltersButton = document.querySelector("#clear-filters");
+const VISITOR_COUNTER_NAMESPACE = "job-ma-rien-tee-nai";
+const VISITOR_COUNTER_KEY = "web-total-visits";
+const LOCAL_VISITOR_COUNTER_KEY = "job-ma-rien-tee-nai-local-visits";
 
 let thailandGeoData = null;
 let recommenderData = null;
@@ -947,6 +951,54 @@ function setStatus(message = "", visible = true) {
   statusText.classList.toggle("is-hidden", !visible);
 }
 
+function setVisitorCountText(text, hint = "") {
+  if (!visitorCountElement) {
+    return;
+  }
+
+  visitorCountElement.textContent = text;
+  visitorCountElement.title = hint;
+}
+
+function increaseLocalVisitorCount() {
+  const currentCount = Number(localStorage.getItem(LOCAL_VISITOR_COUNTER_KEY) || "0");
+  const safeCurrentCount = Number.isFinite(currentCount) && currentCount > 0 ? currentCount : 0;
+  const nextCount = safeCurrentCount + 1;
+  localStorage.setItem(LOCAL_VISITOR_COUNTER_KEY, String(nextCount));
+  return nextCount;
+}
+
+async function updateVisitorCount() {
+  if (!visitorCountElement) {
+    return;
+  }
+
+  setVisitorCountText("กำลังโหลด...");
+
+  try {
+    const endpoint = `https://api.countapi.xyz/hit/${encodeURIComponent(VISITOR_COUNTER_NAMESPACE)}/${encodeURIComponent(VISITOR_COUNTER_KEY)}`;
+    const response = await fetch(endpoint, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`Visitor count request failed: ${response.status}`);
+    }
+
+    const payload = await response.json();
+    if (typeof payload.value !== "number") {
+      throw new Error("Visitor count payload is invalid.");
+    }
+
+    setVisitorCountText(`${payload.value.toLocaleString("th-TH")} ครั้ง`);
+  } catch (error) {
+    console.error("Unable to load global visitor count:", error);
+    const localCount = increaseLocalVisitorCount();
+    setVisitorCountText(
+      `${localCount.toLocaleString("th-TH")} ครั้ง`,
+      "แสดงค่าจำนวนเข้าชมเฉพาะอุปกรณ์นี้ (โหมดสำรอง)"
+    );
+  }
+}
+
 // Draw the map to match the current container size.
 function renderMap(geoData) {
   const width = Math.max(frame.clientWidth - 40, 320);
@@ -1267,4 +1319,5 @@ clearFiltersButton.addEventListener("click", () => {
   updateProvinceVisualState();
   applyRecommendationFilters();
 });
+updateVisitorCount();
 loadMap();

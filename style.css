@@ -88,6 +88,28 @@ input {
   color: var(--text-muted);
 }
 
+.visitor-metric {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.visitor-metric__label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.visitor-metric__value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--title);
+}
+
 .map-panel__eyebrow,
 .detail-card__eyebrow,
 .detail-card__list-eyebrow,
