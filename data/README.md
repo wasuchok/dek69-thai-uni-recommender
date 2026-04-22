@@ -23,3 +23,4 @@ Required raw input files:
 Admissions announcement catalog (optional but recommended):
 
 - `mytcas_universities_2569.json` (from myTCAS universities feed, used for per-university admission links)
+- `mytcas_courses_2569.json` (from myTCAS courses feed, used for faculty/program lists per university)

@@ -1,12 +1,12 @@
 const GEOJSON_PATH = "/data/thailand.geojson";
 const RECOMMENDER_DATA_PATH = "/data/recommender_dataset.json";
 const ADMISSION_CATALOG_PATH = "/data/raw/mytcas_universities_2569.json";
+const COURSE_CATALOG_PATH = "/data/raw/mytcas_courses_2569.json";
 const TCAS_UNIVERSITIES_HOME_URL = "https://course.mytcas.com/universities";
 const UNIVERSITY_ADMISSION_SEARCH_BASE_URL = "https://www.google.com/search?q=";
 const mapSvg = d3.select("#map");
 const statusText = document.querySelector("#status");
 const frame = document.querySelector(".map-frame");
-const visitorCountElement = document.querySelector("#visitor-count");
 const provinceNameElement = document.querySelector("#province-name");
 const provinceDescriptionElement = document.querySelector("#province-description");
 const provinceCountElement = document.querySelector("#province-count");
@@ -24,16 +24,14 @@ const studyTrackSelect = document.querySelector("#study-track");
 const budgetFilterSelect = document.querySelector("#budget-filter");
 const areaFilterSelect = document.querySelector("#area-filter");
 const clearFiltersButton = document.querySelector("#clear-filters");
-const VISITOR_COUNTER_NAMESPACE = "job-ma-rien-tee-nai";
-const VISITOR_COUNTER_KEY = "web-total-visits";
-const LOCAL_VISITOR_COUNTER_KEY = "job-ma-rien-tee-nai-local-visits";
-const VISITOR_COUNTER_CACHE_KEY = "job-ma-rien-tee-nai-global-visits-cache";
-const VISITOR_COUNTER_TIMEOUT_MS = 2500;
 
 let thailandGeoData = null;
 let recommenderData = null;
 let admissionsCatalogEntries = [];
 let admissionsLookupByName = new Map();
+let courseCatalogEntries = [];
+let courseCatalogLookupByUniversityId = new Map();
+let courseCatalogLookupByName = new Map();
 let currentTransform = d3.zoomIdentity;
 let selectedProvinceName = "";
 let hoveredProvinceName = "";
@@ -425,6 +423,15 @@ function getTrackLabel(trackId) {
   return TRACK_LABELS[trackId] ?? TRACK_LABELS.other;
 }
 
+function escapeHtml(text) {
+  return String(text ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function isSafeHttpUrl(value) {
   try {
     const url = new URL(String(value ?? ""));
@@ -535,6 +542,173 @@ function buildAdmissionsLookupByName(entries) {
   return lookup;
 }
 
+function buildCourseCatalogEntries(rawCourses) {
+  if (!Array.isArray(rawCourses)) {
+    return [];
+  }
+
+  const indexByUniversityId = new Map();
+
+  rawCourses.forEach((row) => {
+    const universityId = String(row?.university_id ?? "").trim();
+    const universityName = String(row?.university_name_th ?? row?.university_name_en ?? "").trim();
+    const normalizedName = normalizeAdmissionInstitutionName(universityName);
+    const normalizedBaseName = normalizeAdmissionInstitutionName(
+      removeInstitutionCampusSuffix(universityName)
+    );
+
+    if (!universityId || !normalizedName) {
+      return;
+    }
+
+    const facultyName = String(row?.faculty_name_th ?? row?.faculty_name_en ?? "").trim();
+    const programName = String(row?.program_name_th ?? row?.program_name_en ?? "").trim();
+
+    if (!facultyName || !programName) {
+      return;
+    }
+
+    if (!indexByUniversityId.has(universityId)) {
+      indexByUniversityId.set(universityId, {
+        universityId,
+        universityName,
+        normalizedName,
+        normalizedBaseName,
+        faculties: new Map(),
+      });
+    }
+
+    const universityEntry = indexByUniversityId.get(universityId);
+    const facultyPrograms = universityEntry.faculties.get(facultyName) ?? new Set();
+    facultyPrograms.add(programName);
+    universityEntry.faculties.set(facultyName, facultyPrograms);
+  });
+
+  return Array.from(indexByUniversityId.values()).map((entry) => {
+    const faculties = Array.from(entry.faculties.entries())
+      .map(([facultyName, programs]) => ({
+        facultyName,
+        programCount: programs.size,
+      }))
+      .sort((left, right) => {
+        if (right.programCount !== left.programCount) {
+          return right.programCount - left.programCount;
+        }
+
+        return left.facultyName.localeCompare(right.facultyName, "th");
+      });
+
+    return {
+      universityId: entry.universityId,
+      universityName: entry.universityName,
+      normalizedName: entry.normalizedName,
+      normalizedBaseName: entry.normalizedBaseName,
+      facultyCount: faculties.length,
+      programCount: faculties.reduce((sum, faculty) => sum + faculty.programCount, 0),
+      topFaculties: faculties.slice(0, 4).map((faculty) => faculty.facultyName),
+    };
+  });
+}
+
+function buildCourseCatalogLookupByName(entries) {
+  const lookup = new Map();
+
+  entries.forEach((entry) => {
+    [entry.normalizedName, entry.normalizedBaseName].forEach((key) => {
+      if (!key) {
+        return;
+      }
+
+      const existingEntries = lookup.get(key) ?? [];
+      existingEntries.push(entry);
+      lookup.set(key, existingEntries);
+    });
+  });
+
+  return lookup;
+}
+
+function findCourseCatalogEntryByInstitutionName(institutionName, admissionEntry) {
+  if (admissionEntry?.universityId && courseCatalogLookupByUniversityId.has(admissionEntry.universityId)) {
+    return courseCatalogLookupByUniversityId.get(admissionEntry.universityId);
+  }
+
+  if (!courseCatalogEntries.length) {
+    return null;
+  }
+
+  const normalizedName = normalizeAdmissionInstitutionName(institutionName);
+  const normalizedBaseName = normalizeAdmissionInstitutionName(
+    removeInstitutionCampusSuffix(institutionName)
+  );
+
+  const directCandidates = dedupeEntriesByUniversityId([
+    ...(courseCatalogLookupByName.get(normalizedName) ?? []),
+    ...(courseCatalogLookupByName.get(normalizedBaseName) ?? []),
+  ]);
+
+  if (directCandidates.length) {
+    return directCandidates
+      .slice()
+      .sort((left, right) => {
+        if (right.programCount !== left.programCount) {
+          return right.programCount - left.programCount;
+        }
+
+        return left.universityId.localeCompare(right.universityId);
+      })[0];
+  }
+
+  const prefixCandidates = courseCatalogEntries.filter((entry) => {
+    return (
+      normalizedName.startsWith(entry.normalizedName) ||
+      normalizedName.startsWith(entry.normalizedBaseName) ||
+      normalizedBaseName.startsWith(entry.normalizedName) ||
+      normalizedBaseName.startsWith(entry.normalizedBaseName) ||
+      entry.normalizedName.startsWith(normalizedName) ||
+      entry.normalizedName.startsWith(normalizedBaseName) ||
+      entry.normalizedBaseName.startsWith(normalizedName) ||
+      entry.normalizedBaseName.startsWith(normalizedBaseName)
+    );
+  });
+
+  if (!prefixCandidates.length) {
+    return null;
+  }
+
+  return prefixCandidates
+    .slice()
+    .sort((left, right) => {
+      if (right.programCount !== left.programCount) {
+        return right.programCount - left.programCount;
+      }
+
+      return left.universityId.localeCompare(right.universityId);
+    })[0];
+}
+
+function getInstitutionCourseCatalogMarkup(institutionName, admissionEntry) {
+  const matchedCourseCatalogEntry = findCourseCatalogEntryByInstitutionName(institutionName, admissionEntry);
+
+  if (!matchedCourseCatalogEntry) {
+    return '<span class="institution-list__course">คณะที่เปิดรับ (myTCAS): ยังไม่พบข้อมูลสำหรับสถาบันนี้</span>';
+  }
+
+  const facultyPreview = matchedCourseCatalogEntry.topFaculties.map((name) => escapeHtml(name)).join(" · ");
+  const remainingFacultyCount = Math.max(
+    matchedCourseCatalogEntry.facultyCount - matchedCourseCatalogEntry.topFaculties.length,
+    0
+  );
+  const remainingFacultyLabel = remainingFacultyCount > 0 ? ` · และอีก ${formatNumber(remainingFacultyCount)} คณะ` : "";
+
+  return `
+    <span class="institution-list__course">คณะที่เปิดรับ (myTCAS): ${facultyPreview}${remainingFacultyLabel}</span>
+    <span class="institution-list__program-count">จำนวนหลักสูตรที่พบ ${formatNumber(
+      matchedCourseCatalogEntry.programCount
+    )} หลักสูตร</span>
+  `;
+}
+
 function findAdmissionEntryByInstitutionName(institutionName) {
   if (!admissionsCatalogEntries.length) {
     return null;
@@ -576,11 +750,11 @@ function getAdmissionSearchUrl(institutionName) {
   )}`;
 }
 
-function getInstitutionAdmissionActionMarkup(institution) {
-  const matchedAdmissionEntry = findAdmissionEntryByInstitutionName(institution.name);
+function getInstitutionAdmissionActionMarkup(institutionName, matchedAdmissionEntry) {
+  const admissionEntry = matchedAdmissionEntry ?? findAdmissionEntryByInstitutionName(institutionName);
 
-  if (!matchedAdmissionEntry) {
-    const searchUrl = getAdmissionSearchUrl(institution.name);
+  if (!admissionEntry) {
+    const searchUrl = getAdmissionSearchUrl(institutionName);
     return `
       <span class="institution-list__actions">
         <a class="institution-list__action institution-list__action--primary" href="${searchUrl}" target="_blank" rel="noopener noreferrer">ค้นหาประกาศรับสมัคร</a>
@@ -589,14 +763,14 @@ function getInstitutionAdmissionActionMarkup(institution) {
     `;
   }
 
-  const primaryDocumentUrl = matchedAdmissionEntry.documents[0] ?? "";
-  const primaryUrl = primaryDocumentUrl || matchedAdmissionEntry.universityPageUrl;
+  const primaryDocumentUrl = admissionEntry.documents[0] ?? "";
+  const primaryUrl = primaryDocumentUrl || admissionEntry.universityPageUrl;
   const primaryLabel = primaryDocumentUrl ? "ประกาศรับสมัคร (myTCAS)" : "หน้ารับสมัคร (myTCAS)";
 
   return `
     <span class="institution-list__actions">
       <a class="institution-list__action institution-list__action--primary" href="${primaryUrl}" target="_blank" rel="noopener noreferrer">${primaryLabel}</a>
-      <a class="institution-list__action" href="${matchedAdmissionEntry.universityPageUrl}" target="_blank" rel="noopener noreferrer">ดูรายละเอียดรอบรับสมัคร</a>
+      <a class="institution-list__action" href="${admissionEntry.universityPageUrl}" target="_blank" rel="noopener noreferrer">ดูรายละเอียดรอบรับสมัคร</a>
     </span>
   `;
 }
@@ -716,6 +890,9 @@ function getDataSourceLabel() {
   if (admissionsCatalogEntries.length) {
     labels.push("ประกาศรับสมัคร myTCAS");
   }
+  if (courseCatalogEntries.length) {
+    labels.push("หลักสูตร myTCAS");
+  }
 
   return labels.join(" · ");
 }
@@ -783,6 +960,7 @@ function renderRecommendations() {
   }
 
   recommendations.forEach((institution) => {
+    const matchedAdmissionEntry = findAdmissionEntryByInstitutionName(institution.name);
     const topTrack = institution.tracks?.[0]?.id ?? "other";
     const topProgram = institution.topPrograms?.[0]?.name ?? "ไม่ระบุหลักสูตรเด่น";
     const graduatesYearLabel = postGraduateSummary?.graduatesYear ?? "ล่าสุด";
@@ -808,8 +986,9 @@ function renderRecommendations() {
         <summary class="institution-list__details-toggle">ดูรายละเอียดเพิ่ม</summary>
         <div class="institution-list__details-body">
           <span class="institution-list__track">หลักสูตรเด่น: ${topProgram}</span>
+          ${getInstitutionCourseCatalogMarkup(institution.name, matchedAdmissionEntry)}
           <span class="institution-list__outcome">${graduateOutcomeText}</span>
-          ${getInstitutionAdmissionActionMarkup(institution)}
+          ${getInstitutionAdmissionActionMarkup(institution.name, matchedAdmissionEntry)}
         </div>
       </details>
     `;
@@ -1228,104 +1407,6 @@ function setStatus(message = "", visible = true) {
   statusText.classList.toggle("is-hidden", !visible);
 }
 
-function setVisitorCountText(text, hint = "") {
-  if (!visitorCountElement) {
-    return;
-  }
-
-  visitorCountElement.textContent = text;
-  visitorCountElement.title = hint;
-}
-
-function increaseLocalVisitorCount() {
-  const currentCount = Number(localStorage.getItem(LOCAL_VISITOR_COUNTER_KEY) || "0");
-  const safeCurrentCount = Number.isFinite(currentCount) && currentCount > 0 ? currentCount : 0;
-  const nextCount = safeCurrentCount + 1;
-  localStorage.setItem(LOCAL_VISITOR_COUNTER_KEY, String(nextCount));
-  return nextCount;
-}
-
-function getCachedGlobalVisitorCount() {
-  const cachedCount = Number(localStorage.getItem(VISITOR_COUNTER_CACHE_KEY) || "0");
-  if (!Number.isFinite(cachedCount) || cachedCount <= 0) {
-    return null;
-  }
-  return cachedCount;
-}
-
-function setCachedGlobalVisitorCount(count) {
-  if (!Number.isFinite(count) || count <= 0) {
-    return;
-  }
-  localStorage.setItem(VISITOR_COUNTER_CACHE_KEY, String(Math.round(count)));
-}
-
-async function fetchVisitorCountFromCounterApi() {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), VISITOR_COUNTER_TIMEOUT_MS);
-
-  try {
-    const endpoint = `https://api.counterapi.dev/v1/${encodeURIComponent(VISITOR_COUNTER_NAMESPACE)}/${encodeURIComponent(VISITOR_COUNTER_KEY)}/up`;
-    const response = await fetch(endpoint, {
-      cache: "no-store",
-      signal: controller.signal,
-    });
-
-    if (!response.ok) {
-      throw new Error(`CounterAPI request failed: ${response.status}`);
-    }
-
-    const payload = await response.json();
-    const nextCount = Number(payload?.value);
-
-    if (!Number.isFinite(nextCount) || nextCount <= 0) {
-      throw new Error("CounterAPI payload is invalid.");
-    }
-
-    return nextCount;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
-async function updateVisitorCount() {
-  if (!visitorCountElement) {
-    return;
-  }
-
-  const cachedCount = getCachedGlobalVisitorCount();
-  if (cachedCount) {
-    setVisitorCountText(
-      `${cachedCount.toLocaleString("th-TH")} ครั้ง`,
-      "แสดงค่าล่าสุดที่เคยโหลดได้ (อาจไม่ใช่เวลาจริง)"
-    );
-  } else {
-    setVisitorCountText("กำลังโหลด...");
-  }
-
-  try {
-    const latestCount = await fetchVisitorCountFromCounterApi();
-    setCachedGlobalVisitorCount(latestCount);
-    setVisitorCountText(`${latestCount.toLocaleString("th-TH")} ครั้ง`, "นับจาก CounterAPI");
-  } catch (error) {
-    console.error("Unable to load global visitor count from CounterAPI:", error);
-
-    if (cachedCount) {
-      setVisitorCountText(
-        `${cachedCount.toLocaleString("th-TH")} ครั้ง`,
-        "แสดงค่าล่าสุดที่เคยโหลดได้ (CounterAPI ไม่พร้อมใช้งาน)"
-      );
-      return;
-    }
-
-    const localCount = increaseLocalVisitorCount();
-    setVisitorCountText(
-      `${localCount.toLocaleString("th-TH")} ครั้ง`,
-      "แสดงค่าจำนวนเข้าชมเฉพาะอุปกรณ์นี้ (โหมดสำรอง)"
-    );
-  }
-}
-
 // Draw the map to match the current container size.
 function renderMap(geoData) {
   const width = Math.max(frame.clientWidth - 40, 320);
@@ -1537,11 +1618,15 @@ async function loadMap() {
   setStatus("กำลังโหลดแผนที่และข้อมูลแนะนำ...", true);
 
   try {
-    const [geoData, dataset, admissionsCatalog] = await Promise.all([
+    const [geoData, dataset, admissionsCatalog, courseCatalog] = await Promise.all([
       d3.json(GEOJSON_PATH),
       d3.json(RECOMMENDER_DATA_PATH),
       d3.json(ADMISSION_CATALOG_PATH).catch((error) => {
         console.warn("Unable to load myTCAS admission catalog:", error);
+        return [];
+      }),
+      d3.json(COURSE_CATALOG_PATH).catch((error) => {
+        console.warn("Unable to load myTCAS courses catalog:", error);
         return [];
       }),
     ]);
@@ -1557,6 +1642,11 @@ async function loadMap() {
     thailandGeoData = geoData;
     admissionsCatalogEntries = buildAdmissionsCatalog(admissionsCatalog);
     admissionsLookupByName = buildAdmissionsLookupByName(admissionsCatalogEntries);
+    courseCatalogEntries = buildCourseCatalogEntries(courseCatalog);
+    courseCatalogLookupByUniversityId = new Map(
+      courseCatalogEntries.map((entry) => [entry.universityId, entry])
+    );
+    courseCatalogLookupByName = buildCourseCatalogLookupByName(courseCatalogEntries);
     recommenderData = {
       ...dataset,
       institutions: enrichInstitutionsWithRegions(dataset),
@@ -1652,5 +1742,4 @@ clearFiltersButton.addEventListener("click", () => {
   updateProvinceVisualState();
   applyRecommendationFilters();
 });
-updateVisitorCount();
 loadMap();
