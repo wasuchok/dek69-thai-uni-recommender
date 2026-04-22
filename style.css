@@ -416,6 +416,16 @@ input {
   background: rgba(255, 255, 255, 0.36);
 }
 
+.mini-stat--primary {
+  border-color: var(--accent);
+  background: rgba(17, 24, 39, 0.92);
+}
+
+.mini-stat--primary .mini-stat__label,
+.mini-stat--primary .mini-stat__value {
+  color: #fff;
+}
+
 .mini-stat__label {
   margin-bottom: 8px;
 }
@@ -425,6 +435,22 @@ input {
   font-size: 0.98rem;
   line-height: 1.45;
   color: var(--title);
+}
+
+.detail-card__meta {
+  margin-top: -4px;
+  padding: 8px 2px 2px;
+}
+
+.detail-card__meta-line {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.detail-card__meta-line + .detail-card__meta-line {
+  margin-top: 4px;
 }
 
 .detail-card__list-head {
@@ -483,6 +509,44 @@ input {
 .institution-list__outcome {
   margin-top: 6px;
   color: #384152;
+}
+
+.institution-list__quick {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #384152;
+}
+
+.institution-list__details {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+}
+
+.institution-list__details-toggle {
+  cursor: pointer;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--title);
+  list-style: none;
+}
+
+.institution-list__details-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.institution-list__details-toggle::after {
+  content: " +";
+}
+
+.institution-list__details[open] .institution-list__details-toggle::after {
+  content: " -";
+}
+
+.institution-list__details-body {
+  margin-top: 8px;
 }
 
 .institution-list__actions {

@@ -9,9 +9,11 @@ const frame = document.querySelector(".map-frame");
 const visitorCountElement = document.querySelector("#visitor-count");
 const provinceNameElement = document.querySelector("#province-name");
 const provinceDescriptionElement = document.querySelector("#province-description");
-const provinceRegionElement = document.querySelector("#province-region");
 const provinceCountElement = document.querySelector("#province-count");
-const provinceUpdatedElement = document.querySelector("#province-updated");
+const summaryBudgetElement = document.querySelector("#summary-budget");
+const summaryOutcomeElement = document.querySelector("#summary-outcome");
+const selectedAreaMetaElement = document.querySelector("#selected-area-meta");
+const dataSourceMetaElement = document.querySelector("#data-source-meta");
 const institutionListElement = document.querySelector("#institution-list");
 const provinceChipElement = document.querySelector("#province-chip");
 const provinceSearchInput = document.querySelector("#province-search");
@@ -718,23 +720,54 @@ function getDataSourceLabel() {
   return labels.join(" · ");
 }
 
+function getAverageBudgetLabel(institutions) {
+  const budgets = institutions
+    .map((institution) => institution.budgetMedianPerYear)
+    .filter((value) => typeof value === "number" && !Number.isNaN(value));
+
+  if (!budgets.length) {
+    return "ไม่ระบุ";
+  }
+
+  const averageBudget = budgets.reduce((sum, value) => sum + value, 0) / budgets.length;
+  return formatBudget(averageBudget);
+}
+
+function getPostGraduateOutcomeLabel(institutions, postGraduateSummary) {
+  const graduateRatios = institutions
+    .map((institution) => institution.graduateToStudentRatio)
+    .filter((value) => typeof value === "number" && !Number.isNaN(value));
+
+  if (graduateRatios.length) {
+    const averageGraduateRatio =
+      graduateRatios.reduce((sum, value) => sum + value, 0) / graduateRatios.length;
+    return `สำเร็จเฉลี่ย ${formatPercent(averageGraduateRatio)}`;
+  }
+
+  if (postGraduateSummary?.employmentRatePct != null) {
+    return `มีงานทำ ${formatPercent(postGraduateSummary.employmentRatePct)}`;
+  }
+
+  return "ยังไม่มีข้อมูล";
+}
+
 function renderRecommendations() {
   const recommendations = buildRecommendationResults();
   currentAreaFilterLabel = getAreaLabelByFilterValue(currentFilters.area);
   const postGraduateSummary = recommenderData?.postGraduateSummary;
-  const employmentContext =
-    postGraduateSummary?.employmentRatePct != null
-      ? ` · อัตรามีงานทำจากผู้ตอบแบบสอบถามปี ${postGraduateSummary.surveyYear} ${formatPercent(
-          postGraduateSummary.employmentRatePct
-        )}`
-      : "";
+  const dataSourceLabel = getDataSourceLabel();
 
   provinceChipElement.textContent = currentAreaFilterLabel;
   provinceNameElement.textContent = "สถาบันที่แนะนำ";
-  provinceDescriptionElement.textContent = `กรองด้วย ${getSelectedTrackLabel()} · ${getSelectedBudgetLabel()} · ${currentAreaFilterLabel}${employmentContext}`;
-  provinceRegionElement.textContent = currentAreaFilterLabel;
+  provinceDescriptionElement.textContent = `กรองด้วย ${getSelectedTrackLabel()} · ${getSelectedBudgetLabel()} · ${currentAreaFilterLabel}`;
   provinceCountElement.textContent = `${formatNumber(recommendations.length)} แห่ง`;
-  provinceUpdatedElement.textContent = getDataSourceLabel();
+  summaryBudgetElement.textContent = getAverageBudgetLabel(recommendations);
+  summaryOutcomeElement.textContent = getPostGraduateOutcomeLabel(
+    recommendations,
+    postGraduateSummary
+  );
+  selectedAreaMetaElement.textContent = `พื้นที่ที่เลือก: ${currentAreaFilterLabel}`;
+  dataSourceMetaElement.textContent = `แหล่งข้อมูล: ${dataSourceLabel}`;
 
   institutionListElement.replaceChildren();
 
@@ -770,10 +803,15 @@ function renderRecommendations() {
       <span class="institution-list__name">${institution.name}</span>
       <span class="institution-list__type">${institution.universityType}</span>
       <span class="institution-list__meta">${institution.province} · จำนวนนักศึกษา ${formatNumber(institution.totalStudents)}</span>
-      <span class="institution-list__track">สายเด่น: ${getTrackLabel(topTrack)} · หลักสูตรเด่น: ${topProgram}</span>
-      <span class="institution-list__budget">ต้นทุนต่อหัวต่อปี: ${formatBudget(institution.budgetMedianPerYear)}</span>
-      <span class="institution-list__outcome">${graduateOutcomeText}</span>
-      ${getInstitutionAdmissionActionMarkup(institution)}
+      <span class="institution-list__quick">เหมาะกับสาย ${getTrackLabel(topTrack)} · งบประมาณ ${formatBudget(institution.budgetMedianPerYear)}</span>
+      <details class="institution-list__details">
+        <summary class="institution-list__details-toggle">ดูรายละเอียดเพิ่ม</summary>
+        <div class="institution-list__details-body">
+          <span class="institution-list__track">หลักสูตรเด่น: ${topProgram}</span>
+          <span class="institution-list__outcome">${graduateOutcomeText}</span>
+          ${getInstitutionAdmissionActionMarkup(institution)}
+        </div>
+      </details>
     `;
     institutionListElement.appendChild(listItem);
   });
