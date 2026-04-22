@@ -5,19 +5,20 @@ import csv
 import json
 import math
 import re
-from collections import Counter, defaultdict
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from statistics import median
+from typing import Iterator
 
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "data" / "raw"
 OUTPUT_PATH = ROOT / "data" / "recommender_dataset.json"
 
-INSTITUTION_FILE = RAW_DIR / "univ_uni_11_03_2564.csv"
-STUDENT_FILE = RAW_DIR / "univ_std_11_01_2567.csv"
+TARGET_ACADEMIC_YEAR = 2568
+STUDENT_FILE_GLOB = f"univ_std_11_01_{TARGET_ACADEMIC_YEAR}*.csv"
 COST_FILE = RAW_DIR / "dqe_11_03.csv"
 
 
@@ -218,6 +219,23 @@ def parse_float(value: str) -> float:
         return 0.0
 
 
+def parse_student_count(row: dict[str, str]) -> int:
+    # New schema uses TOTAL_STD, old files used ALL STD.
+    return parse_int(row.get("TOTAL_STD") or row.get("ALL STD") or "")
+
+
+def iter_csv_rows(path: Path, encoding: str) -> Iterator[dict[str, str]]:
+    with path.open(encoding=encoding, newline="") as file:
+        sample = file.read(8192)
+        file.seek(0)
+        try:
+            dialect = csv.Sniffer().sniff(sample, delimiters=",;|\t")
+        except csv.Error:
+            dialect = csv.excel
+        reader = csv.DictReader(file, dialect=dialect)
+        yield from reader
+
+
 def classify_track(program_or_curriculum: str, faculty_name: str = "") -> str:
     text = normalize_program_name(f"{program_or_curriculum} {faculty_name}")
 
@@ -258,48 +276,61 @@ def quantile(sorted_values: list[float], q: float) -> float:
     return sorted_values[low] + (sorted_values[high] - sorted_values[low]) * ratio
 
 
-def load_institution_provinces() -> dict[str, str]:
-    mapping: dict[str, str] = {}
-    with INSTITUTION_FILE.open(encoding="utf-8-sig", newline="") as file:
-        for row in csv.DictReader(file):
-            name = clean_text(row.get("UNIV_NAME") or "")
-            province = clean_text(row.get("PROVINCE_UNIV_NAME_TH") or "")
-            if name:
-                mapping[name] = province
-    return mapping
+def extract_semester_from_filename(path: Path) -> int:
+    match = re.search(rf"_{TARGET_ACADEMIC_YEAR}(?:_(\d+))?\.csv$", path.name)
+    if not match:
+        return 1
+    semester = parse_int(match.group(1) or "1")
+    return semester if semester > 0 else 1
 
 
-def build_dataset() -> dict:
-    province_map = load_institution_provinces()
-    normalized_province_map = {
-        normalize_institution_name(name): province for name, province in province_map.items()
-    }
+def resolve_student_files() -> tuple[list[Path], int]:
+    candidates = sorted(RAW_DIR.glob(STUDENT_FILE_GLOB))
+    if not candidates:
+        return [], 0
 
+    latest_semester = max(extract_semester_from_filename(path) for path in candidates)
+    selected = [
+        path for path in candidates if extract_semester_from_filename(path) == latest_semester
+    ]
+    return selected, latest_semester
+
+
+def build_dataset(student_files: list[Path], target_semester: int) -> dict:
     institutions: dict[str, InstitutionAggregate] = {}
 
     def get_or_create(name: str) -> InstitutionAggregate:
         if name not in institutions:
-            province = province_map.get(name, "")
-            if not province:
-                province = normalized_province_map.get(normalize_institution_name(name), "")
-            institutions[name] = InstitutionAggregate(name=name, province=province)
+            institutions[name] = InstitutionAggregate(name=name)
         return institutions[name]
 
-    with STUDENT_FILE.open(encoding="utf-8-sig", newline="") as file:
-        for row in csv.DictReader(file):
+    for student_file in student_files:
+        for row in iter_csv_rows(student_file, encoding="utf-8-sig"):
+            year = parse_int(row.get("ACADEMIC_YEAR", ""))
+            if year and year != TARGET_ACADEMIC_YEAR:
+                continue
+
+            semester = parse_int(row.get("SEMESTER", ""))
+            if target_semester and semester and semester != target_semester:
+                continue
+
             name = clean_text(row.get("UNIV_NAME_TH") or "")
             if not name:
                 continue
 
-            students = parse_int(row.get("ALL STD", ""))
+            students = parse_student_count(row)
             if students <= 0:
                 continue
 
             program = clean_text(row.get("PROGRAM_NAME") or "")
             faculty = clean_text(row.get("FAC_NAME") or "")
             institution_type = clean_text(row.get("UNIV_TYPE_NAME") or "")
+            province = clean_text(row.get("UNIV_PROVINCE_NAME") or "")
 
             item = get_or_create(name)
+            if province and not item.province:
+                item.province = province
+
             item.total_students += students
             item.track_students[classify_track(program, faculty)] += students
             if program:
@@ -307,18 +338,28 @@ def build_dataset() -> dict:
             if institution_type:
                 item.type_counter[institution_type] += students
 
-    with COST_FILE.open(encoding="cp874", newline="") as file:
-        for row in csv.DictReader(file):
-            name = clean_text(row.get("UNIV_NAME_TH") or "")
-            if not name:
-                continue
+    normalized_institution_index = {
+        normalize_institution_name(name): name for name in institutions.keys()
+    }
 
-            cost = parse_float(row.get("COST_PER_YEAR", ""))
-            if cost <= 0:
-                continue
+    for row in iter_csv_rows(COST_FILE, encoding="cp874"):
+        name = clean_text(row.get("UNIV_NAME_TH") or "")
+        if not name:
+            continue
 
-            item = get_or_create(name)
-            item.costs.append(cost)
+        cost = parse_float(row.get("COST_PER_YEAR", ""))
+        if cost <= 0:
+            continue
+
+        resolved_name = institutions.get(name)
+        if resolved_name is None:
+            mapped_name = normalized_institution_index.get(normalize_institution_name(name))
+            if not mapped_name:
+                continue
+            item = institutions[mapped_name]
+        else:
+            item = resolved_name
+        item.costs.append(cost)
 
     institution_rows = []
     institution_costs = []
@@ -403,16 +444,11 @@ def build_dataset() -> dict:
         },
         "sources": [
             {
-                "datasetId": "univ_uni_11_03",
-                "datasetName": "รายชื่อสถาบันอุดมศึกษา ปีการศึกษา 2564 จำแนกตามจังหวัด",
-                "resourceFile": "univ_uni_11_03_2564.csv",
-                "url": "https://data.mhesi.go.th/dataset/5d5c4958-9e36-41ae-a637-1b31148a1143/resource/d839d3f2-a16c-4346-ac39-d0cf7fd007aa/download/univ_uni_11_03_2564.csv",
-            },
-            {
-                "datasetId": "univ_std_11_011",
-                "datasetName": "นักศึกษาปัจจุบัน ปีการศึกษา 2567 ภาคการศึกษาที่ 1",
-                "resourceFile": "univ_std_11_01_2567.csv",
-                "url": "https://data.mhesi.go.th/dataset/b26d853a-947e-4644-afba-66e6dc391c3c/resource/481584a0-10b0-4302-b05d-345ff4df3786/download/univ_std_11_01_2567.csv",
+                "datasetId": "univ_std_11_01",
+                "datasetName": f"นักศึกษาปัจจุบัน ปีการศึกษา {TARGET_ACADEMIC_YEAR} ภาคการศึกษาที่ {target_semester}",
+                "resourceFile": student_files[0].name,
+                "resourceFiles": [path.name for path in student_files],
+                "url": "https://data.mhesi.go.th/dataset/univ_std_11_01",
             },
             {
                 "datasetId": "dqe_11_03",
@@ -446,12 +482,16 @@ def build_dataset() -> dict:
 
 
 def main() -> None:
-    missing = [path for path in [INSTITUTION_FILE, STUDENT_FILE, COST_FILE] if not path.exists()]
-    if missing:
-        raise FileNotFoundError(f"Missing source files: {missing}")
+    student_files, semester = resolve_student_files()
+    if not student_files:
+        raise FileNotFoundError(
+            f"Missing student file(s) for year {TARGET_ACADEMIC_YEAR}: {RAW_DIR / STUDENT_FILE_GLOB}"
+        )
+    if not COST_FILE.exists():
+        raise FileNotFoundError(f"Missing source file: {COST_FILE}")
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    payload = build_dataset()
+    payload = build_dataset(student_files, semester)
     OUTPUT_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Built {OUTPUT_PATH} with {payload['metadata']['institutionCount']} institutions.")
 
