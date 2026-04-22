@@ -1,5 +1,8 @@
 const GEOJSON_PATH = "/data/thailand.geojson";
 const RECOMMENDER_DATA_PATH = "/data/recommender_dataset.json";
+const ADMISSION_CATALOG_PATH = "/data/raw/mytcas_universities_2569.json";
+const TCAS_UNIVERSITIES_HOME_URL = "https://course.mytcas.com/universities";
+const UNIVERSITY_ADMISSION_SEARCH_BASE_URL = "https://www.google.com/search?q=";
 const mapSvg = d3.select("#map");
 const statusText = document.querySelector("#status");
 const frame = document.querySelector(".map-frame");
@@ -27,6 +30,8 @@ const VISITOR_COUNTER_TIMEOUT_MS = 2500;
 
 let thailandGeoData = null;
 let recommenderData = null;
+let admissionsCatalogEntries = [];
+let admissionsLookupByName = new Map();
 let currentTransform = d3.zoomIdentity;
 let selectedProvinceName = "";
 let hoveredProvinceName = "";
@@ -418,6 +423,182 @@ function getTrackLabel(trackId) {
   return TRACK_LABELS[trackId] ?? TRACK_LABELS.other;
 }
 
+function isSafeHttpUrl(value) {
+  try {
+    const url = new URL(String(value ?? ""));
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+function normalizeAdmissionInstitutionName(name) {
+  return normalizeInstitutionNameForMatch(name).replace(/[.\-–_]/g, "");
+}
+
+function removeInstitutionCampusSuffix(name) {
+  return String(name ?? "")
+    .replace(/\s+(?:วิทยาเขต|ศูนย์การศึกษา|แคมปัส).*/u, "")
+    .replace(
+      /\s+(?:บางเขน|กำแพงแสน|ศรีราชา|หัวหิน|สุพรรณบุรี|พญาไท|พระนครเหนือ|พระนครใต้|นนทบุรี|ปัตตานี|หาดใหญ่|ตรัง|นครศรีธรรมราช)$/u,
+      ""
+    )
+    .trim();
+}
+
+function getAdmissionDocumentUrls(entry) {
+  return [entry?.file_path_1, entry?.file_path_2, entry?.file_path_3, entry?.file_path_4, entry?.file_path_handicap]
+    .map((value) => String(value ?? "").trim())
+    .filter((value) => isSafeHttpUrl(value));
+}
+
+function dedupeEntriesByUniversityId(entries) {
+  const deduped = new Map();
+  entries.forEach((entry) => {
+    if (entry?.universityId) {
+      deduped.set(entry.universityId, entry);
+    }
+  });
+  return Array.from(deduped.values());
+}
+
+function pickBestAdmissionEntry(entries) {
+  if (!entries.length) {
+    return null;
+  }
+
+  return entries
+    .slice()
+    .sort((left, right) => {
+      const rightHasDocuments = right.documents.length > 0 ? 1 : 0;
+      const leftHasDocuments = left.documents.length > 0 ? 1 : 0;
+      if (rightHasDocuments !== leftHasDocuments) {
+        return rightHasDocuments - leftHasDocuments;
+      }
+
+      if (right.normalizedName.length !== left.normalizedName.length) {
+        return right.normalizedName.length - left.normalizedName.length;
+      }
+
+      return left.universityId.localeCompare(right.universityId);
+    })[0];
+}
+
+function buildAdmissionsCatalog(rawCatalog) {
+  if (!Array.isArray(rawCatalog)) {
+    return [];
+  }
+
+  return rawCatalog
+    .map((entry) => {
+      const universityId = String(entry?.university_id ?? "").trim();
+      const universityName = String(entry?.university_name ?? "").trim();
+      const normalizedName = normalizeAdmissionInstitutionName(universityName);
+      const normalizedBaseName = normalizeAdmissionInstitutionName(
+        removeInstitutionCampusSuffix(universityName)
+      );
+
+      if (!universityId || !universityName || !normalizedName) {
+        return null;
+      }
+
+      return {
+        universityId,
+        universityName,
+        normalizedName,
+        normalizedBaseName,
+        universityPageUrl: `${TCAS_UNIVERSITIES_HOME_URL}/${encodeURIComponent(universityId)}`,
+        documents: getAdmissionDocumentUrls(entry),
+      };
+    })
+    .filter(Boolean)
+    .sort((left, right) => right.normalizedName.length - left.normalizedName.length);
+}
+
+function buildAdmissionsLookupByName(entries) {
+  const lookup = new Map();
+
+  entries.forEach((entry) => {
+    [entry.normalizedName, entry.normalizedBaseName].forEach((key) => {
+      if (!key) {
+        return;
+      }
+
+      const existingEntries = lookup.get(key) ?? [];
+      existingEntries.push(entry);
+      lookup.set(key, existingEntries);
+    });
+  });
+
+  return lookup;
+}
+
+function findAdmissionEntryByInstitutionName(institutionName) {
+  if (!admissionsCatalogEntries.length) {
+    return null;
+  }
+
+  const normalizedName = normalizeAdmissionInstitutionName(institutionName);
+  const normalizedBaseName = normalizeAdmissionInstitutionName(
+    removeInstitutionCampusSuffix(institutionName)
+  );
+
+  const directCandidates = dedupeEntriesByUniversityId([
+    ...(admissionsLookupByName.get(normalizedName) ?? []),
+    ...(admissionsLookupByName.get(normalizedBaseName) ?? []),
+  ]);
+
+  if (directCandidates.length) {
+    return pickBestAdmissionEntry(directCandidates);
+  }
+
+  const prefixCandidates = admissionsCatalogEntries.filter((entry) => {
+    return (
+      normalizedName.startsWith(entry.normalizedName) ||
+      normalizedName.startsWith(entry.normalizedBaseName) ||
+      normalizedBaseName.startsWith(entry.normalizedName) ||
+      normalizedBaseName.startsWith(entry.normalizedBaseName) ||
+      entry.normalizedName.startsWith(normalizedName) ||
+      entry.normalizedName.startsWith(normalizedBaseName) ||
+      entry.normalizedBaseName.startsWith(normalizedName) ||
+      entry.normalizedBaseName.startsWith(normalizedBaseName)
+    );
+  });
+
+  return pickBestAdmissionEntry(prefixCandidates);
+}
+
+function getAdmissionSearchUrl(institutionName) {
+  return `${UNIVERSITY_ADMISSION_SEARCH_BASE_URL}${encodeURIComponent(
+    `${institutionName} ประกาศรับสมัครนักศึกษา`
+  )}`;
+}
+
+function getInstitutionAdmissionActionMarkup(institution) {
+  const matchedAdmissionEntry = findAdmissionEntryByInstitutionName(institution.name);
+
+  if (!matchedAdmissionEntry) {
+    const searchUrl = getAdmissionSearchUrl(institution.name);
+    return `
+      <span class="institution-list__actions">
+        <a class="institution-list__action institution-list__action--primary" href="${searchUrl}" target="_blank" rel="noopener noreferrer">ค้นหาประกาศรับสมัคร</a>
+        <a class="institution-list__action" href="${TCAS_UNIVERSITIES_HOME_URL}" target="_blank" rel="noopener noreferrer">ดูรวมประกาศบน myTCAS</a>
+      </span>
+    `;
+  }
+
+  const primaryDocumentUrl = matchedAdmissionEntry.documents[0] ?? "";
+  const primaryUrl = primaryDocumentUrl || matchedAdmissionEntry.universityPageUrl;
+  const primaryLabel = primaryDocumentUrl ? "ประกาศรับสมัคร (myTCAS)" : "หน้ารับสมัคร (myTCAS)";
+
+  return `
+    <span class="institution-list__actions">
+      <a class="institution-list__action institution-list__action--primary" href="${primaryUrl}" target="_blank" rel="noopener noreferrer">${primaryLabel}</a>
+      <a class="institution-list__action" href="${matchedAdmissionEntry.universityPageUrl}" target="_blank" rel="noopener noreferrer">ดูรายละเอียดรอบรับสมัคร</a>
+    </span>
+  `;
+}
+
 function getSelectedTrackLabel() {
   if (currentFilters.track === "all") {
     return "ทุกสาย";
@@ -520,7 +701,7 @@ function buildRecommendationResults() {
 function getDataSourceLabel() {
   const postGraduateSummary = recommenderData?.postGraduateSummary;
   if (!postGraduateSummary) {
-    return "MHESI Open Data";
+    return admissionsCatalogEntries.length ? "MHESI Open Data · myTCAS รับสมัคร" : "MHESI Open Data";
   }
 
   const labels = ["MHESI Open Data"];
@@ -529,6 +710,9 @@ function getDataSourceLabel() {
   }
   if (postGraduateSummary.surveyYear) {
     labels.push(`ภาวะมีงานทำ ${postGraduateSummary.surveyYear}`);
+  }
+  if (admissionsCatalogEntries.length) {
+    labels.push("ประกาศรับสมัคร myTCAS");
   }
 
   return labels.join(" · ");
@@ -589,6 +773,7 @@ function renderRecommendations() {
       <span class="institution-list__track">สายเด่น: ${getTrackLabel(topTrack)} · หลักสูตรเด่น: ${topProgram}</span>
       <span class="institution-list__budget">ต้นทุนต่อหัวต่อปี: ${formatBudget(institution.budgetMedianPerYear)}</span>
       <span class="institution-list__outcome">${graduateOutcomeText}</span>
+      ${getInstitutionAdmissionActionMarkup(institution)}
     `;
     institutionListElement.appendChild(listItem);
   });
@@ -1314,9 +1499,13 @@ async function loadMap() {
   setStatus("กำลังโหลดแผนที่และข้อมูลแนะนำ...", true);
 
   try {
-    const [geoData, dataset] = await Promise.all([
+    const [geoData, dataset, admissionsCatalog] = await Promise.all([
       d3.json(GEOJSON_PATH),
       d3.json(RECOMMENDER_DATA_PATH),
+      d3.json(ADMISSION_CATALOG_PATH).catch((error) => {
+        console.warn("Unable to load myTCAS admission catalog:", error);
+        return [];
+      }),
     ]);
 
     if (!geoData?.features?.length) {
@@ -1328,6 +1517,8 @@ async function loadMap() {
     }
 
     thailandGeoData = geoData;
+    admissionsCatalogEntries = buildAdmissionsCatalog(admissionsCatalog);
+    admissionsLookupByName = buildAdmissionsLookupByName(admissionsCatalogEntries);
     recommenderData = {
       ...dataset,
       institutions: enrichInstitutionsWithRegions(dataset),

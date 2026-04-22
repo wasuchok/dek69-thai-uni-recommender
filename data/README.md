@@ -19,3 +19,7 @@ Required raw input files:
 - `univ_grd_11_01_*.csv` (latest graduates dataset for post-graduation dimension)
 - `univ_exp_11_03_*.csv` (employment status summary for post-graduation dimension)
 - `univ_exp_11_02_*.csv` (survey respondent baseline for employment-rate calculation)
+
+Admissions announcement catalog (optional but recommended):
+
+- `mytcas_universities_2569.json` (from myTCAS universities feed, used for per-university admission links)
