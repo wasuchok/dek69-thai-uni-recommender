@@ -16,3 +16,6 @@ Required raw input files:
 
 - `univ_std_11_01_2568*.csv` (one or more 2568 student files, e.g. term 1/2)
 - `dqe_11_03.csv`
+- `univ_grd_11_01_*.csv` (latest graduates dataset for post-graduation dimension)
+- `univ_exp_11_03_*.csv` (employment status summary for post-graduation dimension)
+- `univ_exp_11_02_*.csv` (survey respondent baseline for employment-rate calculation)

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-22T03:22:50.729730+00:00",
+  "generatedAt": "2026-04-22T03:36:21.826317+00:00",
   "metadata": {
     "institutionCount": 302,
     "programCountInOutput": 1508
@@ -19,8 +19,33 @@
       "datasetName": "ข้อมูลต้นทุนค่าใช้จ่ายในการผลิตนักศึกษาต่อหัวต่อปี ของแต่ละหลักสูตร",
       "resourceFile": "dqe_11_03.csv",
       "url": "https://data.mhesi.go.th/dataset/7fa12569-ce54-44bc-b12f-2f551fd5d722/resource/b6d4c798-c0f1-4107-b086-4c207fed3257/download/dqe_11_03.csv"
+    },
+    {
+      "datasetId": "univ_grd_11_01",
+      "datasetName": "ผู้สำเร็จการศึกษา ปีการศึกษา 2567",
+      "resourceFile": "univ_grd_11_01_2567.csv",
+      "url": "https://data.mhesi.go.th/dataset/univ_grd_11_01"
+    },
+    {
+      "datasetId": "univ_exp_11_03",
+      "datasetName": "ผู้ตอบแบบสอบถามภาวะการมีงานทำ ปีการศึกษา 2566",
+      "resourceFile": "univ_exp_11_03_2566.csv",
+      "url": "https://data.mhesi.go.th/dataset/univ_exp_11_03"
+    },
+    {
+      "datasetId": "univ_exp_11_02",
+      "datasetName": "ผู้ตอบแบบสอบถามภาวะการมีงานทำ (ฐานผู้ตอบ) ปีการศึกษา 2566",
+      "resourceFile": "univ_exp_11_02_2566.csv",
+      "url": "https://data.mhesi.go.th/dataset/univ_exp_11_03"
     }
   ],
+  "postGraduateSummary": {
+    "graduatesYear": 2567,
+    "surveyYear": 2566,
+    "surveyRespondents": 175464,
+    "employedRespondents": 122380,
+    "employmentRatePct": 69.75
+  },
   "tracks": [
     {
       "id": "engineering",
@@ -96,6 +121,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 845,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 168,
+      "graduateToStudentRatio": 19.88,
       "tracks": [
         {
           "id": "education",
@@ -132,6 +159,8 @@
       "universityType": "มหาวิทยาลัยรัฐไม่จำกัดรับ",
       "totalStudents": 277765,
       "budgetMedianPerYear": 31724.0,
+      "graduatesLatestYear": 2206,
+      "graduateToStudentRatio": 0.79,
       "tracks": [
         {
           "id": "law_politics",
@@ -212,6 +241,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 39991,
       "budgetMedianPerYear": 84800.0,
+      "graduatesLatestYear": 9643,
+      "graduateToStudentRatio": 24.11,
       "tracks": [
         {
           "id": "health",
@@ -292,6 +323,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 37201,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 7852,
+      "graduateToStudentRatio": 21.11,
       "tracks": [
         {
           "id": "engineering",
@@ -368,6 +401,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 34015,
       "budgetMedianPerYear": 55697.0,
+      "graduatesLatestYear": 4423,
+      "graduateToStudentRatio": 13.0,
       "tracks": [
         {
           "id": "business",
@@ -436,6 +471,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 29965,
       "budgetMedianPerYear": 87500.0,
+      "graduatesLatestYear": 4524,
+      "graduateToStudentRatio": 15.1,
       "tracks": [
         {
           "id": "science",
@@ -504,6 +541,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 29137,
       "budgetMedianPerYear": 116902.0,
+      "graduatesLatestYear": 7214,
+      "graduateToStudentRatio": 24.76,
       "tracks": [
         {
           "id": "health",
@@ -580,6 +619,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 27376,
       "budgetMedianPerYear": 62000.0,
+      "graduatesLatestYear": 5240,
+      "graduateToStudentRatio": 19.14,
       "tracks": [
         {
           "id": "engineering",
@@ -644,6 +685,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 25130,
       "budgetMedianPerYear": 62000.0,
+      "graduatesLatestYear": 4982,
+      "graduateToStudentRatio": 19.82,
       "tracks": [
         {
           "id": "social_human",
@@ -724,6 +767,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 24363,
       "budgetMedianPerYear": 67660.0,
+      "graduatesLatestYear": 4311,
+      "graduateToStudentRatio": 17.69,
       "tracks": [
         {
           "id": "engineering",
@@ -784,6 +829,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 18151,
       "budgetMedianPerYear": 55250.0,
+      "graduatesLatestYear": 7517,
+      "graduateToStudentRatio": 41.41,
       "tracks": [
         {
           "id": "business",
@@ -860,6 +907,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 17713,
       "budgetMedianPerYear": 76281.5,
+      "graduatesLatestYear": 3242,
+      "graduateToStudentRatio": 18.3,
       "tracks": [
         {
           "id": "business",
@@ -928,6 +977,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 16250,
       "budgetMedianPerYear": 94500.0,
+      "graduatesLatestYear": 2505,
+      "graduateToStudentRatio": 15.42,
       "tracks": [
         {
           "id": "business",
@@ -1004,6 +1055,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 14486,
       "budgetMedianPerYear": 152021.5,
+      "graduatesLatestYear": 3312,
+      "graduateToStudentRatio": 22.86,
       "tracks": [
         {
           "id": "engineering",
@@ -1060,6 +1113,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 12368,
       "budgetMedianPerYear": 52362.0,
+      "graduatesLatestYear": 2315,
+      "graduateToStudentRatio": 18.72,
       "tracks": [
         {
           "id": "business",
@@ -1128,6 +1183,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 11348,
       "budgetMedianPerYear": 104467.0,
+      "graduatesLatestYear": 1915,
+      "graduateToStudentRatio": 16.88,
       "tracks": [
         {
           "id": "science",
@@ -1192,6 +1249,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 9677,
       "budgetMedianPerYear": 100000.0,
+      "graduatesLatestYear": 1796,
+      "graduateToStudentRatio": 18.56,
       "tracks": [
         {
           "id": "business",
@@ -1260,6 +1319,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 9557,
       "budgetMedianPerYear": 34944.0,
+      "graduatesLatestYear": 2563,
+      "graduateToStudentRatio": 26.82,
       "tracks": [
         {
           "id": "education",
@@ -1332,6 +1393,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 8067,
       "budgetMedianPerYear": 22000.0,
+      "graduatesLatestYear": 2163,
+      "graduateToStudentRatio": 26.81,
       "tracks": [
         {
           "id": "social_human",
@@ -1400,6 +1463,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 7404,
       "budgetMedianPerYear": 92074.5,
+      "graduatesLatestYear": 1542,
+      "graduateToStudentRatio": 20.83,
       "tracks": [
         {
           "id": "business",
@@ -1476,6 +1541,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 7386,
       "budgetMedianPerYear": 35289.0,
+      "graduatesLatestYear": 1437,
+      "graduateToStudentRatio": 19.46,
       "tracks": [
         {
           "id": "social_human",
@@ -1548,6 +1615,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 7193,
       "budgetMedianPerYear": 61500.0,
+      "graduatesLatestYear": 1934,
+      "graduateToStudentRatio": 26.89,
       "tracks": [
         {
           "id": "business",
@@ -1616,6 +1685,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 6079,
       "budgetMedianPerYear": 47600.0,
+      "graduatesLatestYear": 2172,
+      "graduateToStudentRatio": 35.73,
       "tracks": [
         {
           "id": "business",
@@ -1664,6 +1735,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 6028,
       "budgetMedianPerYear": 80470.0,
+      "graduatesLatestYear": 226,
+      "graduateToStudentRatio": 3.75,
       "tracks": [
         {
           "id": "engineering",
@@ -1732,6 +1805,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 5931,
       "budgetMedianPerYear": 28000.0,
+      "graduatesLatestYear": 1027,
+      "graduateToStudentRatio": 17.32,
       "tracks": [
         {
           "id": "business",
@@ -1796,6 +1871,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 5802,
       "budgetMedianPerYear": 80000.0,
+      "graduatesLatestYear": 1593,
+      "graduateToStudentRatio": 27.46,
       "tracks": [
         {
           "id": "business",
@@ -1860,6 +1937,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 5672,
       "budgetMedianPerYear": 69710.0,
+      "graduatesLatestYear": 780,
+      "graduateToStudentRatio": 13.75,
       "tracks": [
         {
           "id": "arts_media",
@@ -1920,6 +1999,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 5457,
       "budgetMedianPerYear": 89062.0,
+      "graduatesLatestYear": 1112,
+      "graduateToStudentRatio": 20.38,
       "tracks": [
         {
           "id": "business",
@@ -1972,6 +2053,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 5154,
       "budgetMedianPerYear": 30500.0,
+      "graduatesLatestYear": 1431,
+      "graduateToStudentRatio": 27.76,
       "tracks": [
         {
           "id": "business",
@@ -2028,6 +2111,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 4396,
       "budgetMedianPerYear": 119000.0,
+      "graduatesLatestYear": 2523,
+      "graduateToStudentRatio": 57.39,
       "tracks": [
         {
           "id": "business",
@@ -2100,6 +2185,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 4266,
       "budgetMedianPerYear": 60430.0,
+      "graduatesLatestYear": 1386,
+      "graduateToStudentRatio": 32.49,
       "tracks": [
         {
           "id": "business",
@@ -2168,6 +2255,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 3978,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 1428,
+      "graduateToStudentRatio": 35.9,
       "tracks": [
         {
           "id": "business",
@@ -2216,6 +2305,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 3672,
       "budgetMedianPerYear": 69700.0,
+      "graduatesLatestYear": 1381,
+      "graduateToStudentRatio": 37.61,
       "tracks": [
         {
           "id": "business",
@@ -2288,6 +2379,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 3396,
       "budgetMedianPerYear": 75000.0,
+      "graduatesLatestYear": 745,
+      "graduateToStudentRatio": 21.94,
       "tracks": [
         {
           "id": "engineering",
@@ -2340,6 +2433,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 3155,
       "budgetMedianPerYear": 90000.0,
+      "graduatesLatestYear": 784,
+      "graduateToStudentRatio": 24.85,
       "tracks": [
         {
           "id": "science",
@@ -2388,6 +2483,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 2966,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 779,
+      "graduateToStudentRatio": 26.26,
       "tracks": [
         {
           "id": "engineering",
@@ -2432,6 +2529,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 2891,
       "budgetMedianPerYear": 64000.0,
+      "graduatesLatestYear": 480,
+      "graduateToStudentRatio": 16.6,
       "tracks": [
         {
           "id": "science",
@@ -2496,6 +2595,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 2885,
       "budgetMedianPerYear": 67592.0,
+      "graduatesLatestYear": 563,
+      "graduateToStudentRatio": 19.51,
       "tracks": [
         {
           "id": "health",
@@ -2552,6 +2653,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 2806,
       "budgetMedianPerYear": 55049.0,
+      "graduatesLatestYear": 365,
+      "graduateToStudentRatio": 13.01,
       "tracks": [
         {
           "id": "engineering",
@@ -2608,6 +2711,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 1976,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 422,
+      "graduateToStudentRatio": 21.36,
       "tracks": [
         {
           "id": "science",
@@ -2664,6 +2769,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 1909,
       "budgetMedianPerYear": 45848.0,
+      "graduatesLatestYear": 748,
+      "graduateToStudentRatio": 39.18,
       "tracks": [
         {
           "id": "science",
@@ -2716,6 +2823,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 1887,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 689,
+      "graduateToStudentRatio": 36.51,
       "tracks": [
         {
           "id": "science",
@@ -2772,6 +2881,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 1561,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 549,
+      "graduateToStudentRatio": 35.17,
       "tracks": [
         {
           "id": "science",
@@ -2820,6 +2931,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 1507,
       "budgetMedianPerYear": 212500.0,
+      "graduatesLatestYear": 339,
+      "graduateToStudentRatio": 22.5,
       "tracks": [
         {
           "id": "health",
@@ -2868,6 +2981,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 1444,
       "budgetMedianPerYear": 309800.0,
+      "graduatesLatestYear": 290,
+      "graduateToStudentRatio": 20.08,
       "tracks": [
         {
           "id": "service_tourism",
@@ -2920,6 +3035,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 1347,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 474,
+      "graduateToStudentRatio": 35.19,
       "tracks": [
         {
           "id": "science",
@@ -2968,6 +3085,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 1157,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 192,
+      "graduateToStudentRatio": 16.59,
       "tracks": [
         {
           "id": "arts_media",
@@ -3012,6 +3131,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 1140,
       "budgetMedianPerYear": 86672.5,
+      "graduatesLatestYear": 321,
+      "graduateToStudentRatio": 28.16,
       "tracks": [
         {
           "id": "engineering",
@@ -3072,6 +3193,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 1043,
       "budgetMedianPerYear": 146238.0,
+      "graduatesLatestYear": 1945,
+      "graduateToStudentRatio": 186.48,
       "tracks": [
         {
           "id": "business",
@@ -3148,6 +3271,8 @@
       "universityType": "มหาวิทยาลัยรัฐจำกัดรับ",
       "totalStudents": 964,
       "budgetMedianPerYear": 92492.0,
+      "graduatesLatestYear": 171,
+      "graduateToStudentRatio": 17.74,
       "tracks": [
         {
           "id": "engineering",
@@ -3192,6 +3317,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 887,
       "budgetMedianPerYear": 260267.0,
+      "graduatesLatestYear": 115,
+      "graduateToStudentRatio": 12.97,
       "tracks": [
         {
           "id": "service_tourism",
@@ -3220,6 +3347,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 876,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 211,
+      "graduateToStudentRatio": 24.09,
       "tracks": [
         {
           "id": "business",
@@ -3268,6 +3397,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 871,
       "budgetMedianPerYear": 80000.0,
+      "graduatesLatestYear": 205,
+      "graduateToStudentRatio": 23.54,
       "tracks": [
         {
           "id": "health",
@@ -3288,6 +3419,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 861,
       "budgetMedianPerYear": 200000.0,
+      "graduatesLatestYear": 180,
+      "graduateToStudentRatio": 20.91,
       "tracks": [
         {
           "id": "health",
@@ -3324,6 +3457,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 681,
       "budgetMedianPerYear": 55000.0,
+      "graduatesLatestYear": 251,
+      "graduateToStudentRatio": 36.86,
       "tracks": [
         {
           "id": "education",
@@ -3376,6 +3511,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 601,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 163,
+      "graduateToStudentRatio": 27.12,
       "tracks": [
         {
           "id": "education",
@@ -3416,6 +3553,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 596,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 119,
+      "graduateToStudentRatio": 19.97,
       "tracks": [
         {
           "id": "engineering",
@@ -3456,6 +3595,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 532,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 213,
+      "graduateToStudentRatio": 40.04,
       "tracks": [
         {
           "id": "business",
@@ -3476,6 +3617,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 504,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 81,
+      "graduateToStudentRatio": 16.07,
       "tracks": [
         {
           "id": "health",
@@ -3496,6 +3639,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 316,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "health",
@@ -3516,6 +3661,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 310,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "business",
@@ -3580,6 +3727,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 296,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 84,
+      "graduateToStudentRatio": 28.38,
       "tracks": [
         {
           "id": "health",
@@ -3600,6 +3749,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 261,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 69,
+      "graduateToStudentRatio": 26.44,
       "tracks": [
         {
           "id": "health",
@@ -3620,6 +3771,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 239,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 60,
+      "graduateToStudentRatio": 25.1,
       "tracks": [
         {
           "id": "health",
@@ -3640,6 +3793,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 235,
       "budgetMedianPerYear": 70133.0,
+      "graduatesLatestYear": 224,
+      "graduateToStudentRatio": 95.32,
       "tracks": [
         {
           "id": "other",
@@ -3680,6 +3835,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 174,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "health",
@@ -3716,6 +3873,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 120,
       "budgetMedianPerYear": 531297.0,
+      "graduatesLatestYear": 18,
+      "graduateToStudentRatio": 15.0,
       "tracks": [
         {
           "id": "arts_media",
@@ -3744,6 +3903,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 71,
       "budgetMedianPerYear": 53650.0,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "business",
@@ -3808,6 +3969,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 70,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 26,
+      "graduateToStudentRatio": 37.14,
       "tracks": [
         {
           "id": "other",
@@ -3840,6 +4003,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 19,
       "budgetMedianPerYear": 89000.0,
+      "graduatesLatestYear": 15,
+      "graduateToStudentRatio": 78.95,
       "tracks": [
         {
           "id": "arts_media",
@@ -3868,6 +4033,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 3590,
       "budgetMedianPerYear": 17500.0,
+      "graduatesLatestYear": 688,
+      "graduateToStudentRatio": 19.16,
       "tracks": [
         {
           "id": "education",
@@ -3932,6 +4099,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 3021,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 15,
+      "graduateToStudentRatio": 0.5,
       "tracks": [
         {
           "id": "business",
@@ -3980,6 +4149,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 989,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 205,
+      "graduateToStudentRatio": 20.73,
       "tracks": [
         {
           "id": "business",
@@ -4036,6 +4207,8 @@
       "universityType": "มหาวิทยาลัยรัฐจำกัดรับ",
       "totalStudents": 3945,
       "budgetMedianPerYear": 25813.5,
+      "graduatesLatestYear": 1090,
+      "graduateToStudentRatio": 27.63,
       "tracks": [
         {
           "id": "education",
@@ -4096,6 +4269,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 186,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "education",
@@ -4132,6 +4307,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 33647,
       "budgetMedianPerYear": 50000.0,
+      "graduatesLatestYear": 8258,
+      "graduateToStudentRatio": 24.54,
       "tracks": [
         {
           "id": "health",
@@ -4212,6 +4389,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 3603,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "business",
@@ -4272,6 +4451,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 2482,
       "budgetMedianPerYear": 50000.0,
+      "graduatesLatestYear": 641,
+      "graduateToStudentRatio": 25.83,
       "tracks": [
         {
           "id": "engineering",
@@ -4332,6 +4513,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 2110,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "other",
@@ -4388,6 +4571,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 1433,
       "budgetMedianPerYear": 43117.0,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "health",
@@ -4444,6 +4629,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 1018,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "education",
@@ -4496,6 +4683,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 7184,
       "budgetMedianPerYear": 26000.0,
+      "graduatesLatestYear": 1477,
+      "graduateToStudentRatio": 20.56,
       "tracks": [
         {
           "id": "education",
@@ -4572,6 +4761,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 1067,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 503,
+      "graduateToStudentRatio": 47.14,
       "tracks": [
         {
           "id": "engineering",
@@ -4616,6 +4807,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 879,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 246,
+      "graduateToStudentRatio": 27.99,
       "tracks": [
         {
           "id": "science",
@@ -4668,6 +4861,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 5281,
       "budgetMedianPerYear": 46800.0,
+      "graduatesLatestYear": 844,
+      "graduateToStudentRatio": 15.98,
       "tracks": [
         {
           "id": "education",
@@ -4740,6 +4935,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 1385,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 158,
+      "graduateToStudentRatio": 11.41,
       "tracks": [
         {
           "id": "business",
@@ -4768,6 +4965,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 218,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -4812,6 +5011,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 27711,
       "budgetMedianPerYear": 60000.0,
+      "graduatesLatestYear": 5539,
+      "graduateToStudentRatio": 19.99,
       "tracks": [
         {
           "id": "health",
@@ -4892,6 +5093,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 11615,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 2551,
+      "graduateToStudentRatio": 21.96,
       "tracks": [
         {
           "id": "business",
@@ -4948,6 +5151,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 3234,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 1043,
+      "graduateToStudentRatio": 32.25,
       "tracks": [
         {
           "id": "business",
@@ -5000,6 +5205,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 3151,
       "budgetMedianPerYear": 40197.0,
+      "graduatesLatestYear": 699,
+      "graduateToStudentRatio": 22.18,
       "tracks": [
         {
           "id": "science",
@@ -5064,6 +5271,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 2248,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 29,
+      "graduateToStudentRatio": 1.29,
       "tracks": [
         {
           "id": "business",
@@ -5116,6 +5325,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 1018,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 208,
+      "graduateToStudentRatio": 20.43,
       "tracks": [
         {
           "id": "education",
@@ -5168,6 +5379,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 243,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -5196,6 +5409,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 184,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 30,
+      "graduateToStudentRatio": 16.3,
       "tracks": [
         {
           "id": "engineering",
@@ -5224,6 +5439,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 53,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 3,
+      "graduateToStudentRatio": 5.66,
       "tracks": [
         {
           "id": "other",
@@ -5244,6 +5461,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 3979,
       "budgetMedianPerYear": 19000.0,
+      "graduatesLatestYear": 854,
+      "graduateToStudentRatio": 21.46,
       "tracks": [
         {
           "id": "education",
@@ -5304,6 +5523,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 406,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 106,
+      "graduateToStudentRatio": 26.11,
       "tracks": [
         {
           "id": "education",
@@ -5340,6 +5561,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 230,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -5380,6 +5603,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 2086,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -5436,6 +5661,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 492,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 93,
+      "graduateToStudentRatio": 18.9,
       "tracks": [
         {
           "id": "education",
@@ -5472,6 +5699,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 306,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 103,
+      "graduateToStudentRatio": 33.66,
       "tracks": [
         {
           "id": "law_politics",
@@ -5528,6 +5757,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 1744,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 310,
+      "graduateToStudentRatio": 17.78,
       "tracks": [
         {
           "id": "business",
@@ -5584,6 +5815,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 962,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 200,
+      "graduateToStudentRatio": 20.79,
       "tracks": [
         {
           "id": "engineering",
@@ -5636,6 +5869,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 594,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 130,
+      "graduateToStudentRatio": 21.89,
       "tracks": [
         {
           "id": "education",
@@ -5672,6 +5907,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 90,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "science",
@@ -5700,6 +5937,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 2831,
       "budgetMedianPerYear": 35500.0,
+      "graduatesLatestYear": 293,
+      "graduateToStudentRatio": 10.35,
       "tracks": [
         {
           "id": "law_politics",
@@ -5764,6 +6003,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 2617,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -5812,6 +6053,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 6379,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 1201,
+      "graduateToStudentRatio": 18.83,
       "tracks": [
         {
           "id": "health",
@@ -5868,6 +6111,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 1290,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 387,
+      "graduateToStudentRatio": 30.0,
       "tracks": [
         {
           "id": "health",
@@ -5920,6 +6165,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 133,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "education",
@@ -5944,6 +6191,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 17740,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 2965,
+      "graduateToStudentRatio": 16.71,
       "tracks": [
         {
           "id": "engineering",
@@ -6012,6 +6261,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 16979,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 2713,
+      "graduateToStudentRatio": 15.98,
       "tracks": [
         {
           "id": "engineering",
@@ -6084,6 +6335,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 12088,
       "budgetMedianPerYear": 22800.0,
+      "graduatesLatestYear": 2308,
+      "graduateToStudentRatio": 19.09,
       "tracks": [
         {
           "id": "social_human",
@@ -6160,6 +6413,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 6141,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 956,
+      "graduateToStudentRatio": 15.57,
       "tracks": [
         {
           "id": "engineering",
@@ -6220,6 +6475,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 5717,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "law_politics",
@@ -6284,6 +6541,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 1145,
       "budgetMedianPerYear": 94000.0,
+      "graduatesLatestYear": 266,
+      "graduateToStudentRatio": 23.23,
       "tracks": [
         {
           "id": "health",
@@ -6348,6 +6607,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 954,
       "budgetMedianPerYear": 40000.0,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -6404,6 +6665,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 735,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -6444,6 +6707,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 314,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -6472,6 +6737,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 306,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "other",
@@ -6500,6 +6767,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 188,
       "budgetMedianPerYear": 79280.0,
+      "graduatesLatestYear": 41,
+      "graduateToStudentRatio": 21.81,
       "tracks": [
         {
           "id": "social_human",
@@ -6548,6 +6817,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 4,
       "budgetMedianPerYear": 240000.0,
+      "graduatesLatestYear": 1,
+      "graduateToStudentRatio": 25.0,
       "tracks": [
         {
           "id": "arts_media",
@@ -6572,6 +6843,8 @@
       "universityType": "มหาวิทยาลัยรัฐจำกัดรับ",
       "totalStudents": 7672,
       "budgetMedianPerYear": 26612.0,
+      "graduatesLatestYear": 2235,
+      "graduateToStudentRatio": 29.13,
       "tracks": [
         {
           "id": "engineering",
@@ -6640,6 +6913,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 245,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -6684,6 +6959,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 15596,
       "budgetMedianPerYear": 80000.0,
+      "graduatesLatestYear": 2322,
+      "graduateToStudentRatio": 14.89,
       "tracks": [
         {
           "id": "engineering",
@@ -6740,6 +7017,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 13977,
       "budgetMedianPerYear": 31000.0,
+      "graduatesLatestYear": 473,
+      "graduateToStudentRatio": 3.38,
       "tracks": [
         {
           "id": "education",
@@ -6812,6 +7091,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 2789,
       "budgetMedianPerYear": 47125.0,
+      "graduatesLatestYear": 494,
+      "graduateToStudentRatio": 17.71,
       "tracks": [
         {
           "id": "health",
@@ -6872,6 +7153,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 2410,
       "budgetMedianPerYear": 60000.0,
+      "graduatesLatestYear": 784,
+      "graduateToStudentRatio": 32.53,
       "tracks": [
         {
           "id": "health",
@@ -6936,6 +7219,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 1285,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -6992,6 +7277,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 211,
       "budgetMedianPerYear": 45000.0,
+      "graduatesLatestYear": 128,
+      "graduateToStudentRatio": 60.66,
       "tracks": [
         {
           "id": "business",
@@ -7044,6 +7331,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 91,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -7076,6 +7365,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 59,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 35,
+      "graduateToStudentRatio": 59.32,
       "tracks": [
         {
           "id": "other",
@@ -7104,6 +7395,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 28,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -7132,6 +7425,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 13716,
       "budgetMedianPerYear": 118667.0,
+      "graduatesLatestYear": 2683,
+      "graduateToStudentRatio": 19.56,
       "tracks": [
         {
           "id": "health",
@@ -7208,6 +7503,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 8642,
       "budgetMedianPerYear": 22500.0,
+      "graduatesLatestYear": 2239,
+      "graduateToStudentRatio": 25.91,
       "tracks": [
         {
           "id": "social_human",
@@ -7276,6 +7573,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 5929,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 1011,
+      "graduateToStudentRatio": 17.05,
       "tracks": [
         {
           "id": "law_politics",
@@ -7328,6 +7627,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 2397,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 765,
+      "graduateToStudentRatio": 31.91,
       "tracks": [
         {
           "id": "science",
@@ -7384,6 +7685,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 1971,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -7440,6 +7743,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 796,
       "budgetMedianPerYear": 55000.0,
+      "graduatesLatestYear": 277,
+      "graduateToStudentRatio": 34.8,
       "tracks": [
         {
           "id": "social_human",
@@ -7496,6 +7801,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 597,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -7548,6 +7855,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 525,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 125,
+      "graduateToStudentRatio": 23.81,
       "tracks": [
         {
           "id": "health",
@@ -7596,6 +7905,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 430,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 106,
+      "graduateToStudentRatio": 24.65,
       "tracks": [
         {
           "id": "engineering",
@@ -7636,6 +7947,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 6683,
       "budgetMedianPerYear": 20600.0,
+      "graduatesLatestYear": 1844,
+      "graduateToStudentRatio": 27.59,
       "tracks": [
         {
           "id": "education",
@@ -7704,6 +8017,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 883,
       "budgetMedianPerYear": 40000.0,
+      "graduatesLatestYear": 333,
+      "graduateToStudentRatio": 37.71,
       "tracks": [
         {
           "id": "business",
@@ -7756,6 +8071,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 593,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "other",
@@ -7812,6 +8129,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 453,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 47,
+      "graduateToStudentRatio": 10.38,
       "tracks": [
         {
           "id": "health",
@@ -7864,6 +8183,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 173,
       "budgetMedianPerYear": 50000.0,
+      "graduatesLatestYear": 14,
+      "graduateToStudentRatio": 8.09,
       "tracks": [
         {
           "id": "law_politics",
@@ -7904,6 +8225,8 @@
       "universityType": "มหาวิทยาลัยรัฐไม่จำกัดรับ",
       "totalStudents": 48544,
       "budgetMedianPerYear": 13542.5,
+      "graduatesLatestYear": 7578,
+      "graduateToStudentRatio": 15.61,
       "tracks": [
         {
           "id": "law_politics",
@@ -7980,6 +8303,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 3632,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -8032,6 +8357,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 2537,
       "budgetMedianPerYear": 67800.0,
+      "graduatesLatestYear": 1207,
+      "graduateToStudentRatio": 47.58,
       "tracks": [
         {
           "id": "business",
@@ -8092,6 +8419,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 327,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -8112,6 +8441,8 @@
       "universityType": "มหาวิทยาลัยรัฐจำกัดรับ",
       "totalStudents": 3547,
       "budgetMedianPerYear": 39616.5,
+      "graduatesLatestYear": 831,
+      "graduateToStudentRatio": 23.43,
       "tracks": [
         {
           "id": "engineering",
@@ -8184,6 +8515,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 699,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "business",
@@ -8232,6 +8565,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 553,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -8272,6 +8607,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 12427,
       "budgetMedianPerYear": 26000.0,
+      "graduatesLatestYear": 79,
+      "graduateToStudentRatio": 0.64,
       "tracks": [
         {
           "id": "education",
@@ -8348,6 +8685,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 831,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 57,
+      "graduateToStudentRatio": 6.86,
       "tracks": [
         {
           "id": "business",
@@ -8376,6 +8715,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 703,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 130,
+      "graduateToStudentRatio": 18.49,
       "tracks": [
         {
           "id": "health",
@@ -8404,6 +8745,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 322,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -8452,6 +8795,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 37939,
       "budgetMedianPerYear": 72000.0,
+      "graduatesLatestYear": 6590,
+      "graduateToStudentRatio": 17.37,
       "tracks": [
         {
           "id": "business",
@@ -8512,6 +8857,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 29884,
       "budgetMedianPerYear": 103587.5,
+      "graduatesLatestYear": 5131,
+      "graduateToStudentRatio": 17.17,
       "tracks": [
         {
           "id": "science",
@@ -8592,6 +8939,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 29855,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "science",
@@ -8664,6 +9013,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 24577,
       "budgetMedianPerYear": 31285.0,
+      "graduatesLatestYear": 5804,
+      "graduateToStudentRatio": 23.62,
       "tracks": [
         {
           "id": "engineering",
@@ -8724,6 +9075,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 9007,
       "budgetMedianPerYear": 31100.0,
+      "graduatesLatestYear": 1167,
+      "graduateToStudentRatio": 12.96,
       "tracks": [
         {
           "id": "social_human",
@@ -8800,6 +9153,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 7211,
       "budgetMedianPerYear": 65000.0,
+      "graduatesLatestYear": 2726,
+      "graduateToStudentRatio": 37.8,
       "tracks": [
         {
           "id": "law_politics",
@@ -8864,6 +9219,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 4842,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "education",
@@ -8944,6 +9301,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 2358,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 531,
+      "graduateToStudentRatio": 22.52,
       "tracks": [
         {
           "id": "health",
@@ -9004,6 +9363,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 1205,
       "budgetMedianPerYear": 95541.5,
+      "graduatesLatestYear": 295,
+      "graduateToStudentRatio": 24.48,
       "tracks": [
         {
           "id": "health",
@@ -9060,6 +9421,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 931,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 21,
+      "graduateToStudentRatio": 2.26,
       "tracks": [
         {
           "id": "other",
@@ -9108,6 +9471,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 3327,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 837,
+      "graduateToStudentRatio": 25.16,
       "tracks": [
         {
           "id": "engineering",
@@ -9160,6 +9525,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 302,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "business",
@@ -9180,6 +9547,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 2097,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -9220,6 +9589,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 7977,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 1966,
+      "graduateToStudentRatio": 24.65,
       "tracks": [
         {
           "id": "education",
@@ -9292,6 +9663,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 2083,
       "budgetMedianPerYear": 40000.0,
+      "graduatesLatestYear": 730,
+      "graduateToStudentRatio": 35.05,
       "tracks": [
         {
           "id": "education",
@@ -9356,6 +9729,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 213,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -9392,6 +9767,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 6075,
       "budgetMedianPerYear": 27083.0,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -9456,6 +9833,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 4408,
       "budgetMedianPerYear": 38390.0,
+      "graduatesLatestYear": 866,
+      "graduateToStudentRatio": 19.65,
       "tracks": [
         {
           "id": "education",
@@ -9528,6 +9907,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 3179,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "science",
@@ -9580,6 +9961,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 2350,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "science",
@@ -9620,6 +10003,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 534,
       "budgetMedianPerYear": 50750.0,
+      "graduatesLatestYear": 1,
+      "graduateToStudentRatio": 0.19,
       "tracks": [
         {
           "id": "science",
@@ -9664,6 +10049,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 169,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -9692,6 +10079,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 21017,
       "budgetMedianPerYear": 40000.0,
+      "graduatesLatestYear": 4600,
+      "graduateToStudentRatio": 21.89,
       "tracks": [
         {
           "id": "health",
@@ -9768,6 +10157,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 1472,
       "budgetMedianPerYear": 36000.0,
+      "graduatesLatestYear": 279,
+      "graduateToStudentRatio": 18.95,
       "tracks": [
         {
           "id": "other",
@@ -9820,6 +10211,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 289,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -9876,6 +10269,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 4334,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 710,
+      "graduateToStudentRatio": 16.38,
       "tracks": [
         {
           "id": "health",
@@ -9940,6 +10335,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 202,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -9976,6 +10373,8 @@
       "universityType": "มหาวิทยาลัยรัฐจำกัดรับ",
       "totalStudents": 25019,
       "budgetMedianPerYear": 61349.0,
+      "graduatesLatestYear": 6027,
+      "graduateToStudentRatio": 24.09,
       "tracks": [
         {
           "id": "health",
@@ -10056,6 +10455,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 14852,
       "budgetMedianPerYear": 18000.0,
+      "graduatesLatestYear": 2983,
+      "graduateToStudentRatio": 20.08,
       "tracks": [
         {
           "id": "social_human",
@@ -10128,6 +10529,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 642,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "science",
@@ -10176,6 +10579,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 446,
       "budgetMedianPerYear": 22000.0,
+      "graduatesLatestYear": 86,
+      "graduateToStudentRatio": 19.28,
       "tracks": [
         {
           "id": "law_politics",
@@ -10232,6 +10637,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 251,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -10280,6 +10687,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 80,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 21,
+      "graduateToStudentRatio": 26.25,
       "tracks": [
         {
           "id": "other",
@@ -10300,6 +10709,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 8729,
       "budgetMedianPerYear": 31000.0,
+      "graduatesLatestYear": 1630,
+      "graduateToStudentRatio": 18.67,
       "tracks": [
         {
           "id": "business",
@@ -10372,6 +10783,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 1665,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 285,
+      "graduateToStudentRatio": 17.12,
       "tracks": [
         {
           "id": "science",
@@ -10432,6 +10845,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 39,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 76,
+      "graduateToStudentRatio": 194.87,
       "tracks": [
         {
           "id": "service_tourism",
@@ -10452,6 +10867,8 @@
       "universityType": "มหาวิทยาลัยรัฐจำกัดรับ",
       "totalStudents": 47291,
       "budgetMedianPerYear": 36000.0,
+      "graduatesLatestYear": 9028,
+      "graduateToStudentRatio": 19.09,
       "tracks": [
         {
           "id": "business",
@@ -10532,6 +10949,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 9992,
       "budgetMedianPerYear": 21000.0,
+      "graduatesLatestYear": 2730,
+      "graduateToStudentRatio": 27.32,
       "tracks": [
         {
           "id": "education",
@@ -10608,6 +11027,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 627,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 147,
+      "graduateToStudentRatio": 23.44,
       "tracks": [
         {
           "id": "education",
@@ -10644,6 +11065,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 211,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -10680,6 +11103,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 853,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 217,
+      "graduateToStudentRatio": 25.44,
       "tracks": [
         {
           "id": "education",
@@ -10724,6 +11149,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 15,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 34,
+      "graduateToStudentRatio": 226.67,
       "tracks": [
         {
           "id": "business",
@@ -10744,6 +11171,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 208,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -10784,6 +11213,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 365,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "law_politics",
@@ -10816,6 +11247,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 4769,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 737,
+      "graduateToStudentRatio": 15.45,
       "tracks": [
         {
           "id": "engineering",
@@ -10864,6 +11297,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 1284,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "law_politics",
@@ -10904,6 +11339,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 233,
       "budgetMedianPerYear": 2166542.0,
+      "graduatesLatestYear": 40,
+      "graduateToStudentRatio": 17.17,
       "tracks": [
         {
           "id": "engineering",
@@ -10940,6 +11377,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 169,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -10968,6 +11407,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 24,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "business",
@@ -10988,6 +11429,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 4402,
       "budgetMedianPerYear": 38154.0,
+      "graduatesLatestYear": 705,
+      "graduateToStudentRatio": 16.02,
       "tracks": [
         {
           "id": "social_human",
@@ -11060,6 +11503,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 260,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -11108,6 +11553,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 758,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "education",
@@ -11160,6 +11607,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 7587,
       "budgetMedianPerYear": 22298.0,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -11228,6 +11677,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 6918,
       "budgetMedianPerYear": 16000.0,
+      "graduatesLatestYear": 971,
+      "graduateToStudentRatio": 14.04,
       "tracks": [
         {
           "id": "education",
@@ -11300,6 +11751,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 2057,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 398,
+      "graduateToStudentRatio": 19.35,
       "tracks": [
         {
           "id": "law_politics",
@@ -11360,6 +11813,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 769,
       "budgetMedianPerYear": 70000.0,
+      "graduatesLatestYear": 39,
+      "graduateToStudentRatio": 5.07,
       "tracks": [
         {
           "id": "business",
@@ -11408,6 +11863,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 744,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -11456,6 +11913,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 713,
       "budgetMedianPerYear": 60000.0,
+      "graduatesLatestYear": 94,
+      "graduateToStudentRatio": 13.18,
       "tracks": [
         {
           "id": "health",
@@ -11500,6 +11959,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 542,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 95,
+      "graduateToStudentRatio": 17.53,
       "tracks": [
         {
           "id": "education",
@@ -11536,6 +11997,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 265,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "other",
@@ -11572,6 +12035,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 242,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "science",
@@ -11612,6 +12077,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 528,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -11652,6 +12119,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 262,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "science",
@@ -11688,6 +12157,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 7576,
       "budgetMedianPerYear": 12000.0,
+      "graduatesLatestYear": 1481,
+      "graduateToStudentRatio": 19.55,
       "tracks": [
         {
           "id": "education",
@@ -11760,6 +12231,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 2758,
       "budgetMedianPerYear": 52000.0,
+      "graduatesLatestYear": 197,
+      "graduateToStudentRatio": 7.14,
       "tracks": [
         {
           "id": "health",
@@ -11812,6 +12285,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 538,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 125,
+      "graduateToStudentRatio": 23.23,
       "tracks": [
         {
           "id": "education",
@@ -11848,6 +12323,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 301,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -11884,6 +12361,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 8777,
       "budgetMedianPerYear": 15000.0,
+      "graduatesLatestYear": 2246,
+      "graduateToStudentRatio": 25.59,
       "tracks": [
         {
           "id": "education",
@@ -11952,6 +12431,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 6652,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -12004,6 +12485,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 20222,
       "budgetMedianPerYear": 112966.5,
+      "graduatesLatestYear": 4277,
+      "graduateToStudentRatio": 21.15,
       "tracks": [
         {
           "id": "health",
@@ -12072,6 +12555,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 15374,
       "budgetMedianPerYear": 30000.0,
+      "graduatesLatestYear": 3100,
+      "graduateToStudentRatio": 20.16,
       "tracks": [
         {
           "id": "business",
@@ -12136,6 +12621,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 11227,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 2997,
+      "graduateToStudentRatio": 26.69,
       "tracks": [
         {
           "id": "engineering",
@@ -12192,6 +12679,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 3916,
       "budgetMedianPerYear": 67210.0,
+      "graduatesLatestYear": 863,
+      "graduateToStudentRatio": 22.04,
       "tracks": [
         {
           "id": "arts_media",
@@ -12260,6 +12749,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 75,
       "budgetMedianPerYear": 309650.0,
+      "graduatesLatestYear": 37,
+      "graduateToStudentRatio": 49.33,
       "tracks": [
         {
           "id": "other",
@@ -12288,6 +12779,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 6404,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "business",
@@ -12340,6 +12833,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 6077,
       "budgetMedianPerYear": 79000.0,
+      "graduatesLatestYear": 1420,
+      "graduateToStudentRatio": 23.37,
       "tracks": [
         {
           "id": "health",
@@ -12408,6 +12903,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 1120,
       "budgetMedianPerYear": 52181.0,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -12460,6 +12957,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 14,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "business",
@@ -12480,6 +12979,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 1241,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "health",
@@ -12524,6 +13025,8 @@
       "universityType": "สถาบันเอกชน",
       "totalStudents": 773,
       "budgetMedianPerYear": 43028.0,
+      "graduatesLatestYear": 277,
+      "graduateToStudentRatio": 35.83,
       "tracks": [
         {
           "id": "arts_media",
@@ -12552,6 +13055,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 339,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 68,
+      "graduateToStudentRatio": 20.06,
       "tracks": [
         {
           "id": "education",
@@ -12588,6 +13093,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 964,
       "budgetMedianPerYear": 103841.0,
+      "graduatesLatestYear": 205,
+      "graduateToStudentRatio": 21.27,
       "tracks": [
         {
           "id": "arts_media",
@@ -12648,6 +13155,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 304,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 97,
+      "graduateToStudentRatio": 31.91,
       "tracks": [
         {
           "id": "business",
@@ -12700,6 +13209,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 2921,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -12748,6 +13259,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 779,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 163,
+      "graduateToStudentRatio": 20.92,
       "tracks": [
         {
           "id": "education",
@@ -12796,6 +13309,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 322,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -12832,6 +13347,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 246,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "education",
@@ -12864,6 +13381,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 3501,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 668,
+      "graduateToStudentRatio": 19.08,
       "tracks": [
         {
           "id": "business",
@@ -12924,6 +13443,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 693,
       "budgetMedianPerYear": 39125.0,
+      "graduatesLatestYear": 124,
+      "graduateToStudentRatio": 17.89,
       "tracks": [
         {
           "id": "business",
@@ -12976,6 +13497,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 231,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -13008,6 +13531,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 142,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 50,
+      "graduateToStudentRatio": 35.21,
       "tracks": [
         {
           "id": "other",
@@ -13028,6 +13553,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 5821,
       "budgetMedianPerYear": 20000.0,
+      "graduatesLatestYear": 1274,
+      "graduateToStudentRatio": 21.89,
       "tracks": [
         {
           "id": "social_human",
@@ -13096,6 +13623,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 475,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "other",
@@ -13148,6 +13677,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 214,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 53,
+      "graduateToStudentRatio": 24.77,
       "tracks": [
         {
           "id": "law_politics",
@@ -13176,6 +13707,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 548,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 125,
+      "graduateToStudentRatio": 22.81,
       "tracks": [
         {
           "id": "education",
@@ -13216,6 +13749,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 1665,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "business",
@@ -13284,6 +13819,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 509,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "other",
@@ -13336,6 +13873,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 1264,
       "budgetMedianPerYear": 71867.0,
+      "graduatesLatestYear": 370,
+      "graduateToStudentRatio": 29.27,
       "tracks": [
         {
           "id": "education",
@@ -13396,6 +13935,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 520,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 48,
+      "graduateToStudentRatio": 9.23,
       "tracks": [
         {
           "id": "health",
@@ -13436,6 +13977,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 12646,
       "budgetMedianPerYear": 18500.0,
+      "graduatesLatestYear": 2694,
+      "graduateToStudentRatio": 21.3,
       "tracks": [
         {
           "id": "education",
@@ -13512,6 +14055,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 688,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 186,
+      "graduateToStudentRatio": 27.03,
       "tracks": [
         {
           "id": "education",
@@ -13548,6 +14093,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 428,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 110,
+      "graduateToStudentRatio": 25.7,
       "tracks": [
         {
           "id": "health",
@@ -13576,6 +14123,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 419,
       "budgetMedianPerYear": 93500.0,
+      "graduatesLatestYear": 371,
+      "graduateToStudentRatio": 88.54,
       "tracks": [
         {
           "id": "education",
@@ -13632,6 +14181,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 212,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "law_politics",
@@ -13660,6 +14211,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 70,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 25,
+      "graduateToStudentRatio": 35.71,
       "tracks": [
         {
           "id": "other",
@@ -13680,6 +14233,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 18,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "other",
@@ -13700,6 +14255,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 5952,
       "budgetMedianPerYear": 17000.0,
+      "graduatesLatestYear": 1282,
+      "graduateToStudentRatio": 21.54,
       "tracks": [
         {
           "id": "education",
@@ -13772,6 +14329,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 195,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -13808,6 +14367,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 14651,
       "budgetMedianPerYear": 37088.5,
+      "graduatesLatestYear": 3097,
+      "graduateToStudentRatio": 21.14,
       "tracks": [
         {
           "id": "social_human",
@@ -13884,6 +14445,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 1159,
       "budgetMedianPerYear": 45200.0,
+      "graduatesLatestYear": 413,
+      "graduateToStudentRatio": 35.63,
       "tracks": [
         {
           "id": "education",
@@ -13940,6 +14503,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 839,
       "budgetMedianPerYear": 47000.0,
+      "graduatesLatestYear": 284,
+      "graduateToStudentRatio": 33.85,
       "tracks": [
         {
           "id": "health",
@@ -13984,6 +14549,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 630,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -14040,6 +14607,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 407,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 83,
+      "graduateToStudentRatio": 20.39,
       "tracks": [
         {
           "id": "education",
@@ -14076,6 +14645,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 14787,
       "budgetMedianPerYear": 84308.5,
+      "graduatesLatestYear": 3103,
+      "graduateToStudentRatio": 20.98,
       "tracks": [
         {
           "id": "business",
@@ -14156,6 +14727,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 8922,
       "budgetMedianPerYear": 30000.0,
+      "graduatesLatestYear": 2079,
+      "graduateToStudentRatio": 23.3,
       "tracks": [
         {
           "id": "education",
@@ -14232,6 +14805,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 1292,
       "budgetMedianPerYear": 56007.5,
+      "graduatesLatestYear": 249,
+      "graduateToStudentRatio": 19.27,
       "tracks": [
         {
           "id": "health",
@@ -14284,6 +14859,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 1256,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -14328,6 +14905,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 325,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -14372,6 +14951,8 @@
       "universityType": "วิทยาลัยเอกชน",
       "totalStudents": 80,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "arts_media",
@@ -14392,6 +14973,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 39220,
       "budgetMedianPerYear": 57804.0,
+      "graduatesLatestYear": 7008,
+      "graduateToStudentRatio": 17.87,
       "tracks": [
         {
           "id": "engineering",
@@ -14468,6 +15051,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 18343,
       "budgetMedianPerYear": 35000.0,
+      "graduatesLatestYear": 3349,
+      "graduateToStudentRatio": 18.26,
       "tracks": [
         {
           "id": "business",
@@ -14540,6 +15125,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 15322,
       "budgetMedianPerYear": 70792.0,
+      "graduatesLatestYear": 3342,
+      "graduateToStudentRatio": 21.81,
       "tracks": [
         {
           "id": "education",
@@ -14616,6 +15203,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 8261,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "engineering",
@@ -14668,6 +15257,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 2698,
       "budgetMedianPerYear": 74813.0,
+      "graduatesLatestYear": 485,
+      "graduateToStudentRatio": 17.98,
       "tracks": [
         {
           "id": "business",
@@ -14740,6 +15331,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 1793,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "law_politics",
@@ -14804,6 +15397,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 1531,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -14856,6 +15451,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 1113,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 193,
+      "graduateToStudentRatio": 17.34,
       "tracks": [
         {
           "id": "education",
@@ -14908,6 +15505,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 960,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "education",
@@ -14960,6 +15559,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 619,
       "budgetMedianPerYear": 63546.0,
+      "graduatesLatestYear": 141,
+      "graduateToStudentRatio": 22.78,
       "tracks": [
         {
           "id": "business",
@@ -15012,6 +15613,8 @@
       "universityType": "มหาวิทยาลัยเทคโนโลยีราชมงคล",
       "totalStudents": 11,
       "budgetMedianPerYear": 30000.0,
+      "graduatesLatestYear": 1,
+      "graduateToStudentRatio": 9.09,
       "tracks": [
         {
           "id": "business",
@@ -15056,6 +15659,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 9238,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 1648,
+      "graduateToStudentRatio": 17.84,
       "tracks": [
         {
           "id": "business",
@@ -15108,6 +15713,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 6662,
       "budgetMedianPerYear": 23440.0,
+      "graduatesLatestYear": 1198,
+      "graduateToStudentRatio": 17.98,
       "tracks": [
         {
           "id": "social_human",
@@ -15176,6 +15783,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 442,
       "budgetMedianPerYear": 175000.0,
+      "graduatesLatestYear": 598,
+      "graduateToStudentRatio": 135.29,
       "tracks": [
         {
           "id": "science",
@@ -15212,6 +15821,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 268,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -15248,6 +15859,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 4132,
       "budgetMedianPerYear": 49080.0,
+      "graduatesLatestYear": 845,
+      "graduateToStudentRatio": 20.45,
       "tracks": [
         {
           "id": "social_human",
@@ -15324,6 +15937,8 @@
       "universityType": "มหาวิทยาลัยเอกชน",
       "totalStudents": 855,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 84,
+      "graduateToStudentRatio": 9.82,
       "tracks": [
         {
           "id": "business",
@@ -15360,6 +15975,8 @@
       "universityType": "สถานศึกษานอกสังกัดฯ",
       "totalStudents": 503,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": 116,
+      "graduateToStudentRatio": 23.06,
       "tracks": [
         {
           "id": "education",
@@ -15404,6 +16021,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 292,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "other",
@@ -15436,6 +16055,8 @@
       "universityType": "มหาวิทยาลัยราชภัฎ",
       "totalStudents": 6240,
       "budgetMedianPerYear": 18000.0,
+      "graduatesLatestYear": 1727,
+      "graduateToStudentRatio": 27.68,
       "tracks": [
         {
           "id": "education",
@@ -15508,6 +16129,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 547,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -15560,6 +16183,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 331,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",
@@ -15612,6 +16237,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 1165,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "agri_env",
@@ -15676,6 +16303,8 @@
       "universityType": "มหาวิทยาลัยรัฐในกำกับ",
       "totalStudents": 485,
       "budgetMedianPerYear": null,
+      "graduatesLatestYear": null,
+      "graduateToStudentRatio": null,
       "tracks": [
         {
           "id": "social_human",

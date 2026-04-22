@@ -20,6 +20,9 @@ OUTPUT_PATH = ROOT / "data" / "recommender_dataset.json"
 TARGET_ACADEMIC_YEAR = 2568
 STUDENT_FILE_GLOB = f"univ_std_11_01_{TARGET_ACADEMIC_YEAR}*.csv"
 COST_FILE = RAW_DIR / "dqe_11_03.csv"
+GRADUATE_FILE_GLOB = "univ_grd_11_01_*.csv"
+EMPLOYMENT_STATUS_FILE_GLOB = "univ_exp_11_03_*.csv"
+EMPLOYMENT_RESPONDENT_FILE_GLOB = "univ_exp_11_02_*.csv"
 
 
 TRACKS = [
@@ -252,6 +255,7 @@ class InstitutionAggregate:
     province: str = ""
     type_counter: Counter = field(default_factory=Counter)
     total_students: int = 0
+    total_graduates: int = 0
     track_students: Counter = field(default_factory=Counter)
     program_students: Counter = field(default_factory=Counter)
     costs: list[float] = field(default_factory=list)
@@ -294,6 +298,70 @@ def resolve_student_files() -> tuple[list[Path], int]:
         path for path in candidates if extract_semester_from_filename(path) == latest_semester
     ]
     return selected, latest_semester
+
+
+def extract_year_from_filename(path: Path) -> int:
+    match = re.search(r"_(\d{4})(?:_\d+)?\.csv$", path.name)
+    return parse_int(match.group(1) if match else "0")
+
+
+def resolve_latest_file(file_glob: str) -> tuple[Path | None, int]:
+    candidates = sorted(RAW_DIR.glob(file_glob))
+    if not candidates:
+        return None, 0
+
+    selected = max(candidates, key=lambda path: (extract_year_from_filename(path), path.name))
+    return selected, extract_year_from_filename(selected)
+
+
+def resolve_institution_name(
+    raw_name: str, institutions: dict[str, InstitutionAggregate], normalized_index: dict[str, str]
+) -> str | None:
+    if raw_name in institutions:
+        return raw_name
+
+    return normalized_index.get(normalize_institution_name(raw_name))
+
+
+def load_employment_summary(
+    status_file: Path | None,
+    status_year: int,
+    respondent_file: Path | None,
+    respondent_year: int,
+) -> dict | None:
+    if not status_file or not respondent_file:
+        return None
+
+    employed_respondents = 0
+    for row in iter_csv_rows(status_file, encoding="cp874"):
+        status_label = clean_text(row.get("สถานภาพการทำงาน") or row.get("STATUS") or "")
+        count = parse_int(row.get("จำนวน") or row.get("AMOUNT") or row.get("COUNT") or "")
+        if count <= 0:
+            continue
+
+        has_work_before_or_after = "มีงานทำก่อน" in status_label or "มีงานทำหลัง" in status_label
+        if has_work_before_or_after:
+            employed_respondents += count
+
+    survey_respondents = 0
+    for row in iter_csv_rows(respondent_file, encoding="cp874"):
+        respondent_status = clean_text(row.get("สถานะ") or row.get("STATUS") or "")
+        count = parse_int(row.get("จำนวน") or row.get("AMOUNT") or row.get("COUNT") or "")
+        if count <= 0:
+            continue
+
+        if "ผู้ตอบแบบสอบถาม" in respondent_status:
+            survey_respondents += count
+
+    if survey_respondents <= 0:
+        return None
+
+    return {
+        "surveyYear": respondent_year or status_year,
+        "surveyRespondents": survey_respondents,
+        "employedRespondents": employed_respondents,
+        "employmentRatePct": round((employed_respondents / survey_respondents) * 100, 2),
+    }
 
 
 def build_dataset(student_files: list[Path], target_semester: int) -> dict:
@@ -361,6 +429,38 @@ def build_dataset(student_files: list[Path], target_semester: int) -> dict:
             item = resolved_name
         item.costs.append(cost)
 
+    graduate_file, graduate_year = resolve_latest_file(GRADUATE_FILE_GLOB)
+    if graduate_file:
+        for row in iter_csv_rows(graduate_file, encoding="cp874"):
+            year = parse_int(row.get("AYEAR", ""))
+            if graduate_year and year and year != graduate_year:
+                continue
+
+            name = clean_text(row.get("UNIV_NAME_TH") or "")
+            if not name:
+                continue
+
+            graduates = parse_int(row.get("AMOUNT") or row.get("จำนวน") or "")
+            if graduates <= 0:
+                continue
+
+            resolved_name = resolve_institution_name(name, institutions, normalized_institution_index)
+            if not resolved_name:
+                continue
+
+            institutions[resolved_name].total_graduates += graduates
+
+    employment_status_file, employment_status_year = resolve_latest_file(EMPLOYMENT_STATUS_FILE_GLOB)
+    employment_respondent_file, employment_respondent_year = resolve_latest_file(
+        EMPLOYMENT_RESPONDENT_FILE_GLOB
+    )
+    employment_summary = load_employment_summary(
+        employment_status_file,
+        employment_status_year,
+        employment_respondent_file,
+        employment_respondent_year,
+    )
+
     institution_rows = []
     institution_costs = []
     total_program_rows = 0
@@ -405,6 +505,10 @@ def build_dataset(student_files: list[Path], target_semester: int) -> dict:
                 "totalStudents": institution.total_students,
                 "budgetMedianPerYear": round(institution_budget_median, 2)
                 if institution_budget_median is not None
+                else None,
+                "graduatesLatestYear": institution.total_graduates if institution.total_graduates > 0 else None,
+                "graduateToStudentRatio": round((institution.total_graduates / institution.total_students) * 100, 2)
+                if institution.total_graduates > 0 and institution.total_students > 0
                 else None,
                 "tracks": top_tracks,
                 "topPrograms": top_programs,
@@ -456,7 +560,35 @@ def build_dataset(student_files: list[Path], target_semester: int) -> dict:
                 "resourceFile": "dqe_11_03.csv",
                 "url": "https://data.mhesi.go.th/dataset/7fa12569-ce54-44bc-b12f-2f551fd5d722/resource/b6d4c798-c0f1-4107-b086-4c207fed3257/download/dqe_11_03.csv",
             },
+            {
+                "datasetId": "univ_grd_11_01",
+                "datasetName": f"ผู้สำเร็จการศึกษา ปีการศึกษา {graduate_year}"
+                if graduate_file and graduate_year
+                else "ผู้สำเร็จการศึกษา",
+                "resourceFile": graduate_file.name if graduate_file else None,
+                "url": "https://data.mhesi.go.th/dataset/univ_grd_11_01",
+            },
+            {
+                "datasetId": "univ_exp_11_03",
+                "datasetName": f"ผู้ตอบแบบสอบถามภาวะการมีงานทำ ปีการศึกษา {employment_status_year}"
+                if employment_status_file and employment_status_year
+                else "ผู้ตอบแบบสอบถามภาวะการมีงานทำ",
+                "resourceFile": employment_status_file.name if employment_status_file else None,
+                "url": "https://data.mhesi.go.th/dataset/univ_exp_11_03",
+            },
+            {
+                "datasetId": "univ_exp_11_02",
+                "datasetName": f"ผู้ตอบแบบสอบถามภาวะการมีงานทำ (ฐานผู้ตอบ) ปีการศึกษา {employment_respondent_year}"
+                if employment_respondent_file and employment_respondent_year
+                else "ผู้ตอบแบบสอบถามภาวะการมีงานทำ (ฐานผู้ตอบ)",
+                "resourceFile": employment_respondent_file.name if employment_respondent_file else None,
+                "url": "https://data.mhesi.go.th/dataset/univ_exp_11_03",
+            },
         ],
+        "postGraduateSummary": {
+            "graduatesYear": graduate_year or None,
+            **(employment_summary or {}),
+        },
         "tracks": [{"id": track_id, "label": label} for track_id, label in TRACKS],
         "budgetBands": [
             {

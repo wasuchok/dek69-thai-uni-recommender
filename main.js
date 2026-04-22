@@ -395,6 +395,17 @@ function formatNumber(value) {
   return Number(value ?? 0).toLocaleString("th-TH");
 }
 
+function formatPercent(value) {
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    return "ไม่ระบุ";
+  }
+
+  return `${value.toLocaleString("th-TH", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  })}%`;
+}
+
 function formatBudget(value) {
   if (typeof value !== "number" || Number.isNaN(value)) {
     return "ไม่ระบุ";
@@ -497,21 +508,49 @@ function buildRecommendationResults() {
         return (right.totalStudents ?? 0) - (left.totalStudents ?? 0);
       }
 
+      if ((right.graduatesLatestYear ?? 0) !== (left.graduatesLatestYear ?? 0)) {
+        return (right.graduatesLatestYear ?? 0) - (left.graduatesLatestYear ?? 0);
+      }
+
       return left.name.localeCompare(right.name, "th");
     })
     .slice(0, 20);
 }
 
+function getDataSourceLabel() {
+  const postGraduateSummary = recommenderData?.postGraduateSummary;
+  if (!postGraduateSummary) {
+    return "MHESI Open Data";
+  }
+
+  const labels = ["MHESI Open Data"];
+  if (postGraduateSummary.graduatesYear) {
+    labels.push(`ผู้สำเร็จ ${postGraduateSummary.graduatesYear}`);
+  }
+  if (postGraduateSummary.surveyYear) {
+    labels.push(`ภาวะมีงานทำ ${postGraduateSummary.surveyYear}`);
+  }
+
+  return labels.join(" · ");
+}
+
 function renderRecommendations() {
   const recommendations = buildRecommendationResults();
   currentAreaFilterLabel = getAreaLabelByFilterValue(currentFilters.area);
+  const postGraduateSummary = recommenderData?.postGraduateSummary;
+  const employmentContext =
+    postGraduateSummary?.employmentRatePct != null
+      ? ` · อัตรามีงานทำจากผู้ตอบแบบสอบถามปี ${postGraduateSummary.surveyYear} ${formatPercent(
+          postGraduateSummary.employmentRatePct
+        )}`
+      : "";
 
   provinceChipElement.textContent = currentAreaFilterLabel;
   provinceNameElement.textContent = "สถาบันที่แนะนำ";
-  provinceDescriptionElement.textContent = `กรองด้วย ${getSelectedTrackLabel()} · ${getSelectedBudgetLabel()} · ${currentAreaFilterLabel}`;
+  provinceDescriptionElement.textContent = `กรองด้วย ${getSelectedTrackLabel()} · ${getSelectedBudgetLabel()} · ${currentAreaFilterLabel}${employmentContext}`;
   provinceRegionElement.textContent = currentAreaFilterLabel;
   provinceCountElement.textContent = `${formatNumber(recommendations.length)} แห่ง`;
-  provinceUpdatedElement.textContent = "MHESI Open Data";
+  provinceUpdatedElement.textContent = getDataSourceLabel();
 
   institutionListElement.replaceChildren();
 
@@ -529,6 +568,18 @@ function renderRecommendations() {
   recommendations.forEach((institution) => {
     const topTrack = institution.tracks?.[0]?.id ?? "other";
     const topProgram = institution.topPrograms?.[0]?.name ?? "ไม่ระบุหลักสูตรเด่น";
+    const graduatesYearLabel = postGraduateSummary?.graduatesYear ?? "ล่าสุด";
+    const graduateCount = Number(institution.graduatesLatestYear ?? 0);
+    const graduateRatioLabel =
+      typeof institution.graduateToStudentRatio === "number"
+        ? ` · คิดเป็น ${formatPercent(institution.graduateToStudentRatio)} ของนักศึกษาปัจจุบัน`
+        : "";
+    const graduateOutcomeText =
+      graduateCount > 0
+        ? `ผลลัพธ์หลังจบ: ผู้สำเร็จปี ${graduatesYearLabel} ${formatNumber(
+            graduateCount
+          )} คน${graduateRatioLabel}`
+        : "ผลลัพธ์หลังจบ: ยังไม่มีข้อมูลผู้สำเร็จสำหรับสถาบันนี้";
     const listItem = document.createElement("li");
     listItem.className = "institution-list__item";
     listItem.innerHTML = `
@@ -537,6 +588,7 @@ function renderRecommendations() {
       <span class="institution-list__meta">${institution.province} · จำนวนนักศึกษา ${formatNumber(institution.totalStudents)}</span>
       <span class="institution-list__track">สายเด่น: ${getTrackLabel(topTrack)} · หลักสูตรเด่น: ${topProgram}</span>
       <span class="institution-list__budget">ต้นทุนต่อหัวต่อปี: ${formatBudget(institution.budgetMedianPerYear)}</span>
+      <span class="institution-list__outcome">${graduateOutcomeText}</span>
     `;
     institutionListElement.appendChild(listItem);
   });

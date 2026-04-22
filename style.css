@@ -472,11 +472,17 @@ input {
 
 .institution-list__meta,
 .institution-list__track,
-.institution-list__budget {
+.institution-list__budget,
+.institution-list__outcome {
   display: block;
   margin-top: 5px;
   font-size: 0.86rem;
   color: var(--text-muted);
+}
+
+.institution-list__outcome {
+  margin-top: 6px;
+  color: #384152;
 }
 
 @media (max-width: 1080px) {
